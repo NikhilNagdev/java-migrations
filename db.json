@@ -45,8 +45,7 @@
       {
         "additional_details": {
           "datatype": "text",
-          "not_null": false,
-          "default": null
+          "not_null": false
         }
       }
     ]
