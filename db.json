@@ -1,0 +1,53 @@
+
+
+{
+  "table_name": "users",
+  "columns" : [
+      {
+        "user_id": {
+          "datatype": "biginteger",
+          "primary_key": true,
+          "length": 11
+        }
+      },
+      {
+        "user_name": {
+          "datatype": "string",
+          "length": 11
+        }
+      },
+      {
+        "email": {
+          "datatype": "string"
+        }
+      },
+
+      {
+        "password": {
+          "datatype": "string"
+        }
+      },
+
+      {
+        "joining_data_time": {
+          "datatype": "timestamp",
+          "default": "current"
+        }
+      },
+      {
+        "number": {
+          "datatype": "int",
+          "length": 10,
+          "unsigned": true
+        }
+      },
+
+      {
+        "additional_details": {
+          "datatype": "text",
+          "not_null": false,
+          "default": null
+        }
+      }
+    ]
+}
