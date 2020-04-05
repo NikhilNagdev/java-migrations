@@ -7,7 +7,7 @@ public class Column {
     private int length = 0;
     private boolean is_primary_key;
     private boolean not_null = true;
-    private Object default_value = null;
+    private Object defaultValue = null;
     private boolean isUnsigned;
 
     public void setColumn_name(String column_name) {
@@ -51,14 +51,14 @@ public class Column {
     }
 
     public void setDefault_value(Object default_value) {
-        this.default_value = default_value;
+        this.defaultValue = default_value;
     }
 
     public int getLength() {
         return length;
     }
 
-    public boolean isIs_primary_key() {
+    public boolean isPrimarykey() {
         return is_primary_key;
     }
 
@@ -66,8 +66,8 @@ public class Column {
         return not_null;
     }
 
-    public Object getDefault_value() {
-        return default_value;
+    public Object getDefaultValue() {
+        return defaultValue;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Column {
                 ", length=" + length +
                 ", is_primary_key=" + is_primary_key +
                 ", not_null=" + not_null +
-                ", default_value=" + default_value +
+                ", default_value=" + defaultValue +
                 ", isUnsigned=" + isUnsigned +
                 '}';
     }
