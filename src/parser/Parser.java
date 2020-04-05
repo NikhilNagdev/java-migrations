@@ -13,7 +13,8 @@ import java.util.List;
 public class Parser {
 
     public Parser(String pathToFile){
-//        mainReaderObject =  Json.createReader(getFileInputStream(pathToFile));
+        mainReaderObject =  Json.createReader(getFileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\db.json"));
+        jsonTableObject = mainReaderObject.readObject();
     }
 
     private FileInputStream getFileInputStream(String path){
@@ -34,12 +35,12 @@ public class Parser {
 
         //get JsonObject from JsonReader
         JsonObject jsonObject = jsonReader.readObject();
-
+        getTable();
         //we can close IO resource and JsonReader now
         jsonReader.close();
         fis.close();
 //        String name = jsonObject.getString("table_names");
-
+//        System.out.println(jsonObject.getInt("length"));
         JsonArray columns = jsonObject.getJsonArray("columnss");
 //        System.out.println(name);
 
@@ -73,32 +74,57 @@ public class Parser {
     }
 
     public Table getTable(){
-        return null;
+        Table table = new Table();
+        table.setTableName(jsonTableObject.getString("table_name"));
+        table.setColumns(getColumns());
+        System.out.println(table);
+        return table;
     }
 
-    public Column[] getColumns(){
-        JsonObject table = mainReaderObject.readObject();
-        JsonArray columns = table.getJsonArray("columns");
-        List<Column> returnColumns = new ArrayList<Column>();
-        JsonObject columnAttributes = null;
-
+    public List<Column> getColumns(){
+        JsonArray columns = jsonTableObject.getJsonArray("columns");
+        List<Column> columnList = new ArrayList<Column>();
         for (JsonObject column : columns.getValuesAs(JsonObject.class)){
-            Column columnObj = new Column();
-            for(String name : column.keySet()){
-                columnObj.setColumnName(name);
-                columnAttributes = column.getJsonObject(name);
-            }
-            if(!(columnAttributes.getString("datatype") == null)){
-                columnObj.setDatatype(columnAttributes.getString("datatype"));
-            }else{
-                System.out.println("Datatype attribute is missing for column name " + columnObj.getColumn_name());
-            }
+            columnList.add(getColumn(column));
+        }
+        System.out.println(columnList.size());
+        return columnList;
+    }
 
+    public Column getColumn(JsonObject column){
+        Column columnObj = new Column();
+        JsonObject columnAttributes = null;
+        for(String name : column.keySet()){
+            columnObj.setColumnName(name);
+            columnAttributes = column.getJsonObject(name);
+        }
+        setColumnAttributes(columnObj, columnAttributes);
+        return columnObj;
+    }
 
+    public void setColumnAttributes(Column columnObj, JsonObject columnAttributes){
+
+        if(!(columnAttributes.getString("datatype") == null)){
+            columnObj.setDatatype(columnAttributes.getString("datatype"));
+        }else{
+            System.out.println("Datatype attribute is missing for column name " + columnObj.getColumn_name());
         }
 
-        return null;
+        if((columnAttributes.containsKey("primary_key"))){
+            columnObj.setIs_primary_key(columnAttributes.getBoolean("primary_key"));
+        }
+        if((columnAttributes.containsKey("length"))){
+            columnObj.setLength(columnAttributes.getInt("length"));
+        }
+        if((columnAttributes.containsKey("default_value"))){
+            columnObj.setDefault_value(columnAttributes.get("default_value"));
+        }
+        if((columnAttributes.containsKey("unsigned"))){
+            columnObj.setUnsigned(columnAttributes.getBoolean("unsigned"));
+        }
+
     }
 
     private JsonReader mainReaderObject = null;
+    private JsonObject jsonTableObject = null;
 }

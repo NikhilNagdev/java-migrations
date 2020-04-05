@@ -8,6 +8,19 @@ public class Column {
     private boolean is_primary_key;
     private boolean not_null = true;
     private Object default_value = null;
+    private boolean isUnsigned;
+
+    public void setColumn_name(String column_name) {
+        this.column_name = column_name;
+    }
+
+    public boolean isUnsigned() {
+        return isUnsigned;
+    }
+
+    public void setUnsigned(boolean unsigned) {
+        isUnsigned = unsigned;
+    }
 
     public String getColumn_name() {
         return column_name;
@@ -57,4 +70,16 @@ public class Column {
         return default_value;
     }
 
+    @Override
+    public String toString() {
+        return "Column{" +
+                "column_name='" + column_name + '\'' +
+                ", datatype='" + datatype + '\'' +
+                ", length=" + length +
+                ", is_primary_key=" + is_primary_key +
+                ", not_null=" + not_null +
+                ", default_value=" + default_value +
+                ", isUnsigned=" + isUnsigned +
+                '}';
+    }
 }
