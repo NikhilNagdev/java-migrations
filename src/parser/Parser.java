@@ -117,7 +117,14 @@ public class Parser {
             columnObj.setLength(columnAttributes.getInt("length"));
         }
         if((columnAttributes.containsKey("default_value"))){
-            columnObj.setDefault_value(columnAttributes.get("default_value"));
+            if(columnObj.getDatatype().equalsIgnoreCase("timestamp")){
+                columnObj.setDefault_value(columnAttributes.getString("default_value"));
+            }else if(columnObj.getDatatype().equalsIgnoreCase("string")){
+                columnObj.setDefault_value(columnAttributes.get("default_value"));
+            }else{
+                columnObj.setDefault_value(columnAttributes.getInt("default_value"));
+            }
+
         }
         if((columnAttributes.containsKey("unsigned"))){
             columnObj.setUnsigned(columnAttributes.getBoolean("unsigned"));

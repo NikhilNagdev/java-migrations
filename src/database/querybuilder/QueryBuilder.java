@@ -18,15 +18,15 @@ public class QueryBuilder implements DefaultLength {
             String columnDatatype = column.getDatatype();
 
             if(columnDatatype.equalsIgnoreCase("int")){
-                query += column.getColumn_name() + " INT" + addLengthAttribute(column) +  addUnsignedAttribute(column) + addPrimaryKeyAttribute(column) + ",\n";
+                query += column.getColumn_name() + " INT" + addLengthAttribute(column) +  addUnsignedAttribute(column) + addPrimaryKeyAttribute(column) + addDefaultAttribute(column) + ",\n";
             }else if(columnDatatype.equalsIgnoreCase("biginteger") || columnDatatype.equalsIgnoreCase("bigint")){
-                query += column.getColumn_name() + " BIGINT" +  addLengthAttribute(column) + addPrimaryKeyAttribute(column) + ",\n";
+                query += column.getColumn_name() + " BIGINT" +  addLengthAttribute(column) + addUnsignedAttribute(column) + addPrimaryKeyAttribute(column) + addDefaultAttribute(column) + ",\n";
             }else if(columnDatatype.equalsIgnoreCase("string") || columnDatatype.equalsIgnoreCase("varchar")){
-                query += column.getColumn_name() + " VARCHAR" + addLengthAttribute(column) + addPrimaryKeyAttribute(column)  + ",\n";
+                query += column.getColumn_name() + " VARCHAR" + addLengthAttribute(column) + addPrimaryKeyAttribute(column) + addDefaultAttribute(column) + ",\n";
             }else if(columnDatatype.equalsIgnoreCase("text")){
                 query += column.getColumn_name() + " TEXT"  + ",\n";
             }else if(columnDatatype.equalsIgnoreCase("timestamp")){
-                query += column.getColumn_name() + " TIMESTAMP"  + ",\n";
+                query += column.getColumn_name() + " TIMESTAMP"  + addDefaultAttribute(column) + ",\n";
             }
 
 
@@ -37,6 +37,16 @@ public class QueryBuilder implements DefaultLength {
         System.out.println(query);
         return true;
 
+    }
+
+    private String addDefaultAttribute(Column column) {
+
+        if(column.getDatatype().equalsIgnoreCase("timestamp") || column.getDatatype().equalsIgnoreCase("varchar")){
+            return " DEFAULT " + column.getDefaultValue().toString();
+        }
+        if(null != column.getDefaultValue())
+            return " DEFAULT " + column.getDefaultValue();
+        return "";
     }
 
 
