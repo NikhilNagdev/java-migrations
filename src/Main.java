@@ -10,6 +10,6 @@ public class Main {
 //        p.meth();
 
         QueryBuilder qb = new QueryBuilder();
-        qb.generateTable();
+        qb.generateTableQuery();
     }
 }

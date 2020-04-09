@@ -7,35 +7,76 @@ import parser.Parser;
 
 public class QueryBuilder implements DefaultLength {
 
-    public boolean generateTable(){
+    public String generateTableQuery(){
 
         Table table = new Parser("").getTable();
 //        System.out.println(table);
         String query = "CREATE TABLE " + table.getTableName() + "( ";
-
+        String primaryKey = "\nPRIMARY KEY (";
         for(Column column : table.getColumns()){
 
             String columnDatatype = column.getDatatype();
 
             if(columnDatatype.equalsIgnoreCase("int")){
-                query += column.getColumn_name() + " INT" + addLengthAttribute(column) +  addUnsignedAttribute(column) + addPrimaryKeyAttribute(column) + addDefaultAttribute(column) + ",\n";
+                query += column.getColumn_name() +
+                        " INT" +
+                        addLengthAttribute(column) +
+                        addUnsignedAttribute(column) +
+                        (column.isPrimarykey() ? " AUTO INCREMENT " : "")
+                        + addDefaultAttribute(column)
+                        + ",\n";
+
+                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
+
             }else if(columnDatatype.equalsIgnoreCase("biginteger") || columnDatatype.equalsIgnoreCase("bigint")){
-                query += column.getColumn_name() + " BIGINT" +  addLengthAttribute(column) + addUnsignedAttribute(column) + addPrimaryKeyAttribute(column) + addDefaultAttribute(column) + ",\n";
+
+                query += column.getColumn_name() +
+                        " BIGINT" +
+                        addLengthAttribute(column) +
+                        addUnsignedAttribute(column) +
+                        (column.isPrimarykey() ? " AUTO INCREMENT " : "") +
+                        addDefaultAttribute(column) +
+                        ",\n";
+
+                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", ": "";
+
             }else if(columnDatatype.equalsIgnoreCase("string") || columnDatatype.equalsIgnoreCase("varchar")){
-                query += column.getColumn_name() + " VARCHAR" + addLengthAttribute(column) + addPrimaryKeyAttribute(column) + addDefaultAttribute(column) + ",\n";
+
+                query += column.getColumn_name() +
+                        " VARCHAR" +
+                        addLengthAttribute(column) +
+                        addDefaultAttribute(column) +
+                        ",\n";
+
+                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
+
             }else if(columnDatatype.equalsIgnoreCase("text")){
-                query += column.getColumn_name() + " TEXT"  + ",\n";
+
+                query += column.getColumn_name() +
+                        " TEXT"  +
+                        ",\n";
+
+                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
+
             }else if(columnDatatype.equalsIgnoreCase("timestamp")){
-                query += column.getColumn_name() + " TIMESTAMP"  + addDefaultAttribute(column) + ",\n";
+
+                query += column.getColumn_name() +
+                        " TIMESTAMP"  +
+                        addDefaultAttribute(column) +
+                        ",\n";
+
+                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
+
             }
 
 
         }
 
-        query = query.substring(0,query.length()-2) + ");";
+//        primaryKey += ")";
+        query = query.substring(0,query.length()-2) + "," + primaryKey.substring(0, primaryKey.length()-2) + ")\n);";
 
         System.out.println(query);
-        return true;
+        return query;
 
     }
 
