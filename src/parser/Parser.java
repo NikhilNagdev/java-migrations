@@ -14,7 +14,9 @@ public class Parser {
 
     public Parser(String pathToFile){
         mainReaderObject =  Json.createReader(getFileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\db.json"));
+        configReaderObject = Json.createReader(getFileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\dbconfig.json"));
         jsonTableObject = mainReaderObject.readObject();
+        configJsonObject = configReaderObject.readObject();
     }
 
     private FileInputStream getFileInputStream(String path){
@@ -73,6 +75,11 @@ public class Parser {
 //        System.out.println(name);
     }
 
+
+    /**
+     * This method is used to return the table object that is created as per JSON file
+     * @return table object
+     */
     public Table getTable(){
         Table table = new Table();
         table.setTableName(jsonTableObject.getString("table_name"));
@@ -81,6 +88,11 @@ public class Parser {
         return table;
     }
 
+
+    /**
+     * This method is used to return the list of columns that are specified JSON file
+     * @return List of column objects
+     */
     public List<Column> getColumns(){
         JsonArray columns = jsonTableObject.getJsonArray("columns");
         List<Column> columnList = new ArrayList<Column>();
@@ -91,6 +103,12 @@ public class Parser {
         return columnList;
     }
 
+
+    /**
+     * This method is used to return a single columnObj which is generated as per JSON file
+     * @param column is JsonObject by which Column class object has to be created
+     * @return Column class object
+     */
     public Column getColumn(JsonObject column){
         Column columnObj = new Column();
         JsonObject columnAttributes = null;
@@ -102,6 +120,11 @@ public class Parser {
         return columnObj;
     }
 
+    /**
+     * This method is used to set attributes to the Column class obj as per the attributes defined in the JSON file
+     * @param columnObj the Column class object in which the attributes has to be set
+     * @param columnAttributes JsonObject from which the attributes has to be fetched to set it in the Column class object
+     */
     public void setColumnAttributes(Column columnObj, JsonObject columnAttributes){
 
         if(!(columnAttributes.getString("datatype") == null)){
@@ -132,6 +155,12 @@ public class Parser {
 
     }
 
+    public void getConfigAttributes(JsonObject configJsonObject){
+
+    }
+
     private JsonReader mainReaderObject = null;
+    private JsonReader configReaderObject = null;
     private JsonObject jsonTableObject = null;
+    private JsonObject configJsonObject = null;
 }
