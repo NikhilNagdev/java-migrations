@@ -1,14 +1,35 @@
 package database;
 
+import java.util.Map;
+
 public class Column {
 
     private String column_name = null;
     private String datatype = null;
     private int length = 0;
     private boolean is_primary_key;
+
+    public boolean isForeignKey() {
+        return isForeignKey;
+    }
+
+    public void setIsForeignKey(boolean foreignKey) {
+        isForeignKey = foreignKey;
+    }
+
+    public Map<String, String> getForeignKeyAttributes() {
+        return foreignKeyAttributes;
+    }
+
+    public void setForeignKeyAttributes(Map<String, String> foreignKeyAttributes) {
+        this.foreignKeyAttributes = foreignKeyAttributes;
+    }
+
     private boolean not_null = true;
     private Object defaultValue = null;
     private boolean isUnsigned;
+    private boolean isForeignKey;
+    private Map<String, String> foreignKeyAttributes;
 
     public void setColumn_name(String column_name) {
         this.column_name = column_name;
@@ -78,8 +99,10 @@ public class Column {
                 ", length=" + length +
                 ", is_primary_key=" + is_primary_key +
                 ", not_null=" + not_null +
-                ", default_value=" + defaultValue +
+                ", defaultValue=" + defaultValue +
                 ", isUnsigned=" + isUnsigned +
+                ", isForeignKey=" + isForeignKey +
+                ", foreignKeyAttributes=" + foreignKeyAttributes +
                 '}';
     }
 }

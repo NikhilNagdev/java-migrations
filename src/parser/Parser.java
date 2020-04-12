@@ -7,13 +7,15 @@ import files.Files;
 import javax.json.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Parser {
 
     public Parser(String pathToFile){
-        mainReaderObject =  Json.createReader(getFileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\db.json"));
+        mainReaderObject =  Json.createReader(getFileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\questions_table.json"));
         configReaderObject = Json.createReader(getFileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\dbconfig.json"));
         jsonTableObject = mainReaderObject.readObject();
         configJsonObject = configReaderObject.readObject();
@@ -24,7 +26,7 @@ public class Parser {
     }
 
     public void meth() throws IOException {
-        InputStream fis = new FileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\db.json");
+        InputStream fis = new FileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\users_table.json");
 
         //create JsonReader object
         JsonReader jsonReader = Json.createReader(fis);
@@ -73,6 +75,16 @@ public class Parser {
 //
 //        //print employee bean information
 //        System.out.println(name);
+
+//        CREATE TABLE Orders (
+//                OrderID int NOT NULL,
+//                OrderNumber int NOT NULL,
+//                PersonID int,
+//        PRIMARY KEY (OrderID),
+//                CONSTRAINT FOREIGN KEY (PersonID)
+//                REFERENCES Persons(id)
+//);
+
     }
 
 
@@ -149,8 +161,25 @@ public class Parser {
             }
 
         }
+
         if((columnAttributes.containsKey("unsigned"))){
             columnObj.setUnsigned(columnAttributes.getBoolean("unsigned"));
+        }
+
+        if(columnAttributes.containsKey("foreign_key")){
+            JsonObject foreignKeyAttributes = columnAttributes.getJsonObject("foreign_key");
+            Map<String, String> foreignKeyAttributesMap = new HashMap<String, String>();
+
+            for(String key : foreignKeyAttributes.keySet()){
+                foreignKeyAttributesMap.put(key, foreignKeyAttributes.getString(key));
+            }
+
+//            System.out.println("======================================================");
+//            System.out.println(foreignKeyAttributesMap);
+//            System.out.println("======================================================");
+            columnObj.setIsForeignKey(true);
+            columnObj.setForeignKeyAttributes(foreignKeyAttributesMap);
+
         }
 
     }

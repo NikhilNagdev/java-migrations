@@ -13,6 +13,7 @@ public class QueryBuilder implements DefaultLength {
 //        System.out.println(table);
         String query = "CREATE TABLE " + table.getTableName() + "( ";
         String primaryKey = "\nPRIMARY KEY (";
+        String foreignKey = "";
         for(Column column : table.getColumns()){
 
             String columnDatatype = column.getDatatype();
@@ -69,14 +70,36 @@ public class QueryBuilder implements DefaultLength {
 
             }
 
+            if(column.isForeignKey()){
+                foreignKey += addForeignKeyAttributes(query, column) + "\n";
+            }
+
 
         }
 
 //        primaryKey += ")";
-        query = query.substring(0,query.length()-2) + "," + primaryKey.substring(0, primaryKey.length()-2) + ")\n);";
+        query = query.substring(0,query.length()-2) + "," + primaryKey.substring(0, primaryKey.length()-2) + ")";
 
+        if(!foreignKey.equals(""))
+            query += "\n" + foreignKey;
+        query += ");";
         System.out.println(query);
         return query;
+
+    }
+
+    private String addForeignKeyAttributes(String query, Column column) {
+
+//        CONSTRAINT FOREIGN KEY (PersonID)
+//        REFERENCES Persons(id)
+//                ON DELETE CASCADE,
+        String foreignKey = "CONSTRAINT FOREIGN KEY (" + column.getColumn_name() + ")" +
+                " REFERENCES " + column.getForeignKeyAttributes().get("on_table") + "(" + column.getForeignKeyAttributes().get("references") + ")" +
+                (column.getForeignKeyAttributes().get("on_delete") != null ? " ON_DELETE " + column.getForeignKeyAttributes().get("on_delete") : "");
+        System.out.println("=================================================");
+        System.out.println(foreignKey);
+        System.out.println("=================================================");
+        return foreignKey;
 
     }
 
