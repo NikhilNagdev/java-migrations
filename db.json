@@ -1,7 +1,6 @@
 
 {
   "table_name": "users",
-  "len" : 1,
   "columns" : [
       {
         "user_id": {
