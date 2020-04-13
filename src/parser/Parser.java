@@ -1,6 +1,7 @@
 
 package parser;
 import database.Column;
+import database.Database;
 import database.Table;
 import files.Files;
 
@@ -184,8 +185,21 @@ public class Parser {
 
     }
 
-    public void getConfigAttributes(JsonObject configJsonObject){
+    public Database setConfigAttributes(){
 
+        Database db = new Database();
+        db.setDbUrl(configJsonObject.getString("URL"));
+        db.setDbHost(configJsonObject.getString("DB_HOST"));
+        db.setDbPort(configJsonObject.getString("DB_PORT"));
+        db.setDbName(configJsonObject.getString("DB_NAME"));
+        db.setDbUsername(configJsonObject.getString("DB_USERNAME"));
+        db.setDbPassword(configJsonObject.getString("DB_PASSWORD"));
+        return db;
+
+    }
+
+    public Database getDatabase(){
+        return setConfigAttributes();
     }
 
     private JsonReader mainReaderObject = null;

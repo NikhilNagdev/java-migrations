@@ -1,4 +1,5 @@
 
+import database.Database;
 import database.querybuilder.QueryBuilder;
 import parser.Parser;
 
@@ -11,5 +12,8 @@ public class Main {
 
         QueryBuilder qb = new QueryBuilder();
         qb.generateTableQuery();
+
+        Database d = new Database();
+        d.getConnection();
     }
 }

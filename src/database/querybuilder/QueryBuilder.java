@@ -78,11 +78,15 @@ public class QueryBuilder implements DefaultLength {
         }
 
 //        primaryKey += ")";
-        query = query.substring(0,query.length()-2) + "," + primaryKey.substring(0, primaryKey.length()-2) + ")";
+        query = query.substring(0,query.length()-2) + "," + primaryKey.substring(0, primaryKey.length()-2) + "),";
 
-        if(!foreignKey.equals(""))
+        if(!foreignKey.equals("")){
             query += "\n" + foreignKey;
-        query += ");";
+        }else{
+            query = query.substring(0,query.length()-1);
+        }
+        query +=  ");";
+
         System.out.println(query);
         return query;
 
