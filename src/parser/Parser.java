@@ -19,46 +19,40 @@ public class Parser {
         root = pathToFile;
         files = new Files();
         setJsonConfigObjects(pathToFile);
-
     }
 
+
+    /**
+     * This method sets the readerObj with the specified path and then jsonTableObject is set by readerObj
+     * @param path path of the migration file
+     */
     public void setJsonTableObject(String path){
         mainReaderObject =  Json.createReader(files.getFileInputStream(path));
         jsonTableObject = mainReaderObject.readObject();
     }
 
+
+    /**
+     * This method sets the readerObj with the config file path and then jsonTableObject is set by readerObj
+     * @param path path of the migration file
+     */
     public void setJsonConfigObjects(String path){
         configReaderObject = Json.createReader(files.getFileInputStream(path + "\\dbconfig.json"));
         configJsonObject = configReaderObject.readObject();
     }
 
 
-
-    public void generateTables(){
-
-    }
-
     public void meth() throws IOException {
-        InputStream fis = new FileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\users_table.json");
 
-        //create JsonReader object
-        JsonReader jsonReader = Json.createReader(fis);
-
-        /**
-         * We can create JsonReader from Factory also
-         JsonReaderFactory factory = Json.createReaderFactory(null);
-         jsonReader = factory.createReader(fis);
-         */
-
-        //get JsonObject from JsonReader
-        JsonObject jsonObject = jsonReader.readObject();
-        getTable();
-        //we can close IO resource and JsonReader now
-        jsonReader.close();
-        fis.close();
+//        //get JsonObject from JsonReader
+//        JsonObject jsonObject = jsonReader.readObject();
+//        getTable();
+//        //we can close IO resource and JsonReader now
+//        jsonReader.close();
+//        fis.close();
 //        String name = jsonObject.getString("table_names");
 //        System.out.println(jsonObject.getInt("length"));
-        JsonArray columns = jsonObject.getJsonArray("columnss");
+//        JsonArray columns = jsonObject.getJsonArray("columnss");
 //        System.out.println(name);
 
 
@@ -109,20 +103,22 @@ public class Parser {
         Table table = new Table();
         table.setTableName(jsonTableObject.getString("table_name"));
         table.setColumns(getColumns());
-        System.out.println(table);
         return table;
     }
 
+
+    /**
+     * This method returns the list of table objects generated as per migrations files
+     * @return list of table objects
+     */
     public List<Table> getTables(){
         List<Table> tables = new ArrayList<Table>();
-
+        //getting path of all files that are in migration folder
         List<String> paths = files.getAllPathsMigration(this.root + "\\migrations");
-        System.out.println(paths);
         for(String path : paths){
-            setJsonTableObject(path);
+            setJsonTableObject(path);//setting jsonreader object and jsontable object as per one file
             tables.add(getTable());
         }
-
         return tables;
     }
 
@@ -137,7 +133,6 @@ public class Parser {
         for (JsonObject column : columns.getValuesAs(JsonObject.class)){
             columnList.add(getColumn(column));
         }
-        System.out.println(columnList.size());
         return columnList;
     }
 
@@ -165,7 +160,7 @@ public class Parser {
      */
     public void setColumnAttributes(Column columnObj, JsonObject columnAttributes){
 
-        if(!(columnAttributes.getString("datatype") == null)){
+        if(columnAttributes.getString("datatype") != null){
             columnObj.setDatatype(columnAttributes.getString("datatype"));
         }else{
             System.out.println("Datatype attribute is missing for column name " + columnObj.getColumn_name());
@@ -178,12 +173,13 @@ public class Parser {
             columnObj.setLength(columnAttributes.getInt("length"));
         }
         if((columnAttributes.containsKey("default_value"))){
+            //This if help checks the datatype of column so as the default value can be set as string, int etc
             if(columnObj.getDatatype().equalsIgnoreCase("timestamp")){
-                columnObj.setDefault_value(columnAttributes.getString("default_value"));
+                columnObj.setDefault_value(columnAttributes.getString("default_value"));//default value should be string
             }else if(columnObj.getDatatype().equalsIgnoreCase("string")){
-                columnObj.setDefault_value(columnAttributes.get("default_value"));
-            }else{
-                columnObj.setDefault_value(columnAttributes.getInt("default_value"));
+                columnObj.setDefault_value(columnAttributes.get("default_value"));//default value should be enclosed in "" codes
+            }else {
+                columnObj.setDefault_value(columnAttributes.getInt("default_value"));//if default value is other than string it should be int
             }
 
         }
@@ -195,21 +191,20 @@ public class Parser {
         if(columnAttributes.containsKey("foreign_key")){
             JsonObject foreignKeyAttributes = columnAttributes.getJsonObject("foreign_key");
             Map<String, String> foreignKeyAttributesMap = new HashMap<String, String>();
-
             for(String key : foreignKeyAttributes.keySet()){
+                //setting attributes of foreign key in a Map
                 foreignKeyAttributesMap.put(key, foreignKeyAttributes.getString(key));
             }
-
-//            System.out.println("======================================================");
-//            System.out.println(foreignKeyAttributesMap);
-//            System.out.println("======================================================");
             columnObj.setIsForeignKey(true);
             columnObj.setForeignKeyAttributes(foreignKeyAttributesMap);
-
         }
 
     }
 
+    /**
+    * This method sets the Database objects with attributes as per config file
+     * @return  the datatabse object
+    */
     public Database setConfigAttributes(){
 
         Database db = new Database();
@@ -223,11 +218,15 @@ public class Parser {
 
     }
 
+    /**
+     * This method is sed to get the database object that is set as per config file
+     * @return database object
+     * */
     public Database getDatabase(){
-
         return setConfigAttributes();
     }
 
+    //Variable Declarations
     private JsonReader mainReaderObject = null;
     private JsonReader configReaderObject = null;
     private JsonObject jsonTableObject = null;

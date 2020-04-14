@@ -6,7 +6,7 @@
         "user_id": {
           "datatype": "biginteger",
           "primary_key": true,
-          "unsigned" : true,
+          "unsigned" : true
         }
       },
       {
