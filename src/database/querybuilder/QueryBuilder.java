@@ -1,11 +1,19 @@
 package database.querybuilder;
 
 import constants.DefaultLength;
+import database.CRUD;
 import database.Column;
 import database.Table;
 import parser.Parser;
 
+import java.sql.Connection;
+
 public class QueryBuilder implements DefaultLength {
+
+    public QueryBuilder(String tableName, CRUD crud){
+        this.table = tableName;
+        this.crud = crud;
+    }
 
     public String generateTableQuery(Table table){
 
@@ -143,5 +151,15 @@ public class QueryBuilder implements DefaultLength {
         }
         return "";
     }
+
+    public QueryBuilder select(String ...columnNames){
+
+
+
+        return null;
+    }
+
+    private String table = "";
+    private CRUD crud = null;
 
 }
