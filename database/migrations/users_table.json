@@ -7,7 +7,6 @@
           "datatype": "biginteger",
           "primary_key": true,
           "unsigned" : true,
-          "length": 11
         }
       },
       {

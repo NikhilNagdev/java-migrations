@@ -7,9 +7,8 @@ import parser.Parser;
 
 public class QueryBuilder implements DefaultLength {
 
-    public String generateTableQuery(){
+    public String generateTableQuery(Table table){
 
-        Table table = new Parser("").getTable();
 //        System.out.println(table);
         String query = "CREATE TABLE " + table.getTableName() + "( ";
         String primaryKey = "\nPRIMARY KEY (";
@@ -23,7 +22,7 @@ public class QueryBuilder implements DefaultLength {
                         " INT" +
                         addLengthAttribute(column) +
                         addUnsignedAttribute(column) +
-                        (column.isPrimarykey() ? " AUTO INCREMENT " : "")
+                        (column.isPrimarykey() ? " AUTO_INCREMENT " : "")
                         + addDefaultAttribute(column)
                         + ",\n";
 
@@ -87,7 +86,7 @@ public class QueryBuilder implements DefaultLength {
         }
         query +=  ");";
 
-        System.out.println(query);
+//        System.out.println(query);
         return query;
 
     }

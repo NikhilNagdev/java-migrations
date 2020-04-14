@@ -16,14 +16,26 @@ import java.util.Map;
 public class Parser {
 
     public Parser(String pathToFile){
-        mainReaderObject =  Json.createReader(getFileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\questions_table.json"));
-        configReaderObject = Json.createReader(getFileInputStream("F:\\Programming\\Java\\Projects\\java-migrations\\dbconfig.json"));
+        root = pathToFile;
+        files = new Files();
+        setJsonConfigObjects(pathToFile);
+
+    }
+
+    public void setJsonTableObject(String path){
+        mainReaderObject =  Json.createReader(files.getFileInputStream(path));
         jsonTableObject = mainReaderObject.readObject();
+    }
+
+    public void setJsonConfigObjects(String path){
+        configReaderObject = Json.createReader(files.getFileInputStream(path + "\\dbconfig.json"));
         configJsonObject = configReaderObject.readObject();
     }
 
-    private FileInputStream getFileInputStream(String path){
-        return Files.getFileInputStream(path);
+
+
+    public void generateTables(){
+
     }
 
     public void meth() throws IOException {
@@ -99,6 +111,19 @@ public class Parser {
         table.setColumns(getColumns());
         System.out.println(table);
         return table;
+    }
+
+    public List<Table> getTables(){
+        List<Table> tables = new ArrayList<Table>();
+
+        List<String> paths = files.getAllPathsMigration(this.root + "\\migrations");
+        System.out.println(paths);
+        for(String path : paths){
+            setJsonTableObject(path);
+            tables.add(getTable());
+        }
+
+        return tables;
     }
 
 
@@ -199,6 +224,7 @@ public class Parser {
     }
 
     public Database getDatabase(){
+
         return setConfigAttributes();
     }
 
@@ -206,4 +232,7 @@ public class Parser {
     private JsonReader configReaderObject = null;
     private JsonObject jsonTableObject = null;
     private JsonObject configJsonObject = null;
+    private int noOfTables = 0;
+    private Files files = null;
+    private String root = "";
 }

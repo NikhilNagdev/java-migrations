@@ -38,6 +38,7 @@
     {
       "user_id": {
         "datatype": "bigInteger",
+        "unsigned" : true,
         "foreign_key" : {
                           "references" : "id",
                           "on_table" : "users",
