@@ -7,10 +7,13 @@ import database.Table;
 import parser.Parser;
 
 import java.sql.Connection;
+import java.util.*;
 
 public class QueryBuilder implements DefaultLength {
 
     public QueryBuilder(String tableName, CRUD crud){
+        this.columns = new ArrayList<String>();
+        this.wheres = new TreeMap<String, String[]>();
         this.table = tableName;
         this.crud = crud;
     }
@@ -154,12 +157,27 @@ public class QueryBuilder implements DefaultLength {
 
     public QueryBuilder select(String ...columnNames){
 
+        for(String column : columnNames){
+            this.columns.add(column);
+        }
 
+//        this.columns.addAll(Arrays.asList(columnNames));
 
-        return null;
+        return this;
     }
 
+    public QueryBuilder where(String column, String value, String operator){
+        String[] sarray = new String[2];
+        sarray[0] = column;
+        sarray[1] = operator;
+        this.wheres.put(column, sarray);
+        return this;
+    }
+
+    private List<String> columns;
     private String table = "";
     private CRUD crud = null;
+//    private List<SortedMap<String, String>> wheres;
+    private SortedMap<String, String[]> wheres;
 
 }
