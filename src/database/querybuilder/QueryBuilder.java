@@ -15,6 +15,7 @@ public class QueryBuilder implements DefaultLength {
         this.columns = new ArrayList<String>();
 //        this.wheres = new TreeMap<String, String[]>();
         this.wheres = new ArrayList<List<String>>();
+        this.whereMap = new ArrayList<Map<String, String>>();
         this.table = tableName;
         this.crud = crud;
     }
@@ -167,16 +168,22 @@ public class QueryBuilder implements DefaultLength {
         return this;
     }
 
-    public QueryBuilder where(String column, String value, String operator){
+    public QueryBuilder where(String column, Object value, String operator){
 //        String[] sarray = new String[2];
 //        sarray[0] = column;
 //        sarray[1] = operator;
 //        this.wheres.put(column, sarray);
-        List<String> l = new ArrayList<String>();
-        l.add(column);
-        l.add(value);
-        l.add(operator);
-        this.wheres.add(l);
+//        List<String> l = new ArrayList<String>();
+//        l.add(column);
+//        l.add(operator);
+//        l.add(value+"");
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("column", column);
+        m.put("operator", operator);
+        m.put("value", value+"");
+        m.put("whereConditionalOperator", "and");
+        this.whereMap.add(m);
+//        this.wheres.add(l);
         return this;
     }
 
@@ -194,17 +201,73 @@ public class QueryBuilder implements DefaultLength {
             query += column + ", ";
         }
 
-        query = query.substring(0,query.length()-2) + " FROM " + this.table;
+        String whereQuery = " WHERE ";
+        int i=0;
+//        for(List<String> where : this.wheres){
+//            if(i == 0)
+//                whereQuery += where.get(0) + where.get(1) + where.get(2);
+//            else
+//                whereQuery +=
+//            i++;
+//        }
+
+        for(Map<String, String> map : this.whereMap){
+
+            if(i == 0){
+                whereQuery += map.get("column") + map.get("operator") + map.get("value");
+                i++;
+            }else if(map.get("whereConditionalOperator").equalsIgnoreCase("and")){
+                whereQuery += " AND " + map.get("column") + map.get("operator") + map.get("value");
+            }else if(map.get("whereConditionalOperator").equalsIgnoreCase("or")){
+                whereQuery += " OR " + map.get("column") + map.get("operator") + map.get("value");
+            }
+
+
+        }
+
+
+        query = query.substring(0,query.length()-2)  + " FROM " + this.table + whereQuery;
 
         System.out.println(query);
         return query;
 
     }
 
+    public QueryBuilder andWhere(String column, Object value, String operator){
+//        List<String> l = new ArrayList<String>();
+//        l.add(column);
+//        l.add(operator);
+//        l.add(value+"");
+//        this.wheres.add(l);
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("column", column);
+        m.put("operator", operator);
+        m.put("value", value+"");
+        m.put("whereConditionalOperator", "and");
+        this.whereMap.add(m);
+        return this;
+    }
+
+    public QueryBuilder orWhere(String column, Object value, String operator){
+//        List<String> l = new ArrayList<String>();
+//        l.add(column);
+//        l.add(operator);
+//        l.add(value+"");
+//        this.wheres.add(l);
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("column", column);
+        m.put("operator", operator);
+        m.put("value", value+"");
+        m.put("whereConditionalOperator", "or");
+        this.whereMap.add(m);
+        return this;
+    }
+
     private List<String> columns;
     private String table = "";
     private CRUD crud = null;
     private List<List<String>> wheres;
+    private List<Map<String, String>> whereMap;
 //    private SortedMap<String, String[]> wheres;
 
 }

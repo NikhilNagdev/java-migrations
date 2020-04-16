@@ -32,7 +32,13 @@ public class Main {
 //        new Main().generateDatabaseTable();
 
 
-        CRUD.table("users").select("id", "name").get();
+        CRUD.table("users")
+                .select("id", "name")
+                .where("id", 1, "=")
+                .andWhere("name", "nikhil", "=")
+                .orWhere("id", 2, "=")
+                .andWhere("name", "nagdev", "=")
+                .get();
 
 
     }
