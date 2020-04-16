@@ -181,7 +181,6 @@ public class QueryBuilder implements DefaultLength {
         m.put("column", column);
         m.put("operator", operator);
         m.put("value", value+"");
-        m.put("whereConditionalOperator", "and");
         this.whereMap.add(m);
 //        this.wheres.add(l);
         return this;
@@ -202,7 +201,6 @@ public class QueryBuilder implements DefaultLength {
         }
 
         String whereQuery = " WHERE ";
-        int i=0;
 //        for(List<String> where : this.wheres){
 //            if(i == 0)
 //                whereQuery += where.get(0) + where.get(1) + where.get(2);
@@ -213,13 +211,12 @@ public class QueryBuilder implements DefaultLength {
 
         for(Map<String, String> map : this.whereMap){
 
-            if(i == 0){
-                whereQuery += map.get("column") + map.get("operator") + map.get("value");
-                i++;
-            }else if(map.get("whereConditionalOperator").equalsIgnoreCase("and")){
+            if(map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("and")){
                 whereQuery += " AND " + map.get("column") + map.get("operator") + map.get("value");
-            }else if(map.get("whereConditionalOperator").equalsIgnoreCase("or")){
+            }else if(map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("or")){
                 whereQuery += " OR " + map.get("column") + map.get("operator") + map.get("value");
+            }else{
+                whereQuery += map.get("column") + map.get("operator") + map.get("value");
             }
 
 
