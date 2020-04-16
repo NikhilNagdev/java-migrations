@@ -64,7 +64,7 @@ public class Database {
         this.connection = connection;
     }
 
-    private Connection connection = null;
+
 
     public Database getAllAttributes(){
         Parser p = new Parser("");
@@ -94,5 +94,6 @@ public class Database {
     private String dbPort = "";
     private String dbHost = "";
     private String dbUrl = "";
+    private Connection connection = null;
 
 }

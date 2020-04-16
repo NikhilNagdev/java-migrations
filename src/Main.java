@@ -1,4 +1,5 @@
 
+import database.CRUD;
 import database.Database;
 import database.Table;
 import database.querybuilder.QueryBuilder;
@@ -28,13 +29,17 @@ public class Main {
 
 
 //        System.out.println(p.getTables());
-        new Main().generateDatabaseTable();
+//        new Main().generateDatabaseTable();
+
+
+        CRUD.table("users").select("id", "name").get();
+
 
     }
 
     public void generateDatabaseTable(){
         Parser p = new Parser("database");
-        QueryBuilder qb = new QueryBuilder();
+        QueryBuilder qb = new QueryBuilder("", null);
         List<Table> tables = p.getTables();
         for(Table table : tables){
             System.out.println(qb.generateTableQuery(table));
@@ -49,4 +54,5 @@ public class Main {
     }
 
     private Parser p = new Parser("database");
+
 }

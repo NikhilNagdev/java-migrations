@@ -180,6 +180,27 @@ public class QueryBuilder implements DefaultLength {
         return this;
     }
 
+    public List<SortedMap<String, Object>> get(){
+
+//        this.crud.select(this.compileSelect());
+        this.compileSelect();
+        return null;
+    }
+
+    public String compileSelect(){
+        String query = "SELECT ";
+
+        for(String column : this.columns){
+            query += column + ", ";
+        }
+
+        query = query.substring(0,query.length()-2) + " FROM " + this.table;
+
+        System.out.println(query);
+        return query;
+
+    }
+
     private List<String> columns;
     private String table = "";
     private CRUD crud = null;
