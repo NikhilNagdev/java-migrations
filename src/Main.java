@@ -34,10 +34,10 @@ public class Main {
 
         CRUD.table("users")
                 .select("id", "name")
-                .where("id", 1, "=")
-                .andWhere("name", "nikhil", "=")
-                .orWhere("id", 2, "=")
-                .andWhere("name", "nagdev", "=")
+                .where("id", 1)
+                .andWhere("name", "nikhil")
+                .orWhere("id", 2)
+                .andWhere("name", "nagdev")
                 .get();
 
 

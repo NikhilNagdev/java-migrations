@@ -168,23 +168,7 @@ public class QueryBuilder implements DefaultLength {
         return this;
     }
 
-    public QueryBuilder where(String column, Object value, String operator){
-//        String[] sarray = new String[2];
-//        sarray[0] = column;
-//        sarray[1] = operator;
-//        this.wheres.put(column, sarray);
-//        List<String> l = new ArrayList<String>();
-//        l.add(column);
-//        l.add(operator);
-//        l.add(value+"");
-        Map<String, String> m = new HashMap<String, String>();
-        m.put("column", column);
-        m.put("operator", operator);
-        m.put("value", value+"");
-        this.whereMap.add(m);
-//        this.wheres.add(l);
-        return this;
-    }
+
 
     public List<SortedMap<String, Object>> get(){
 
@@ -230,7 +214,25 @@ public class QueryBuilder implements DefaultLength {
 
     }
 
-    public QueryBuilder andWhere(String column, Object value, String operator){
+    public QueryBuilder where(String column, String operator, Object value){
+//        String[] sarray = new String[2];
+//        sarray[0] = column;
+//        sarray[1] = operator;
+//        this.wheres.put(column, sarray);
+//        List<String> l = new ArrayList<String>();
+//        l.add(column);
+//        l.add(operator);
+//        l.add(value+"");
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("column", column);
+        m.put("operator", operator);
+        m.put("value", value+"");
+        this.whereMap.add(m);
+//        this.wheres.add(l);
+        return this;
+    }
+
+    public QueryBuilder andWhere(String column, String operator, Object value){
 //        List<String> l = new ArrayList<String>();
 //        l.add(column);
 //        l.add(operator);
@@ -245,7 +247,7 @@ public class QueryBuilder implements DefaultLength {
         return this;
     }
 
-    public QueryBuilder orWhere(String column, Object value, String operator){
+    public QueryBuilder orWhere(String column, String operator, Object value){
 //        List<String> l = new ArrayList<String>();
 //        l.add(column);
 //        l.add(operator);
@@ -254,6 +256,54 @@ public class QueryBuilder implements DefaultLength {
         Map<String, String> m = new HashMap<String, String>();
         m.put("column", column);
         m.put("operator", operator);
+        m.put("value", value+"");
+        m.put("whereConditionalOperator", "or");
+        this.whereMap.add(m);
+        return this;
+    }
+
+    public QueryBuilder where(String column, Object value){
+//        String[] sarray = new String[2];
+//        sarray[0] = column;
+//        sarray[1] = operator;
+//        this.wheres.put(column, sarray);
+//        List<String> l = new ArrayList<String>();
+//        l.add(column);
+//        l.add(operator);
+//        l.add(value+"");
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("column", column);
+        m.put("operator", "=");
+        m.put("value", value+"");
+        this.whereMap.add(m);
+//        this.wheres.add(l);
+        return this;
+    }
+
+    public QueryBuilder andWhere(String column, Object value){
+//        List<String> l = new ArrayList<String>();
+//        l.add(column);
+//        l.add(operator);
+//        l.add(value+"");
+//        this.wheres.add(l);
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("column", column);
+        m.put("operator", "=");
+        m.put("value", value+"");
+        m.put("whereConditionalOperator", "and");
+        this.whereMap.add(m);
+        return this;
+    }
+
+    public QueryBuilder orWhere(String column, Object value){
+//        List<String> l = new ArrayList<String>();
+//        l.add(column);
+//        l.add(operator);
+//        l.add(value+"");
+//        this.wheres.add(l);
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("column", column);
+        m.put("operator", "=");
         m.put("value", value+"");
         m.put("whereConditionalOperator", "or");
         this.whereMap.add(m);
