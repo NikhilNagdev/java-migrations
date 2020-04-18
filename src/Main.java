@@ -3,7 +3,7 @@ import database.CRUD;
 import database.Database;
 import database.Table;
 import database.querybuilder.QueryBuilder;
-import files.Files;
+import files.FileOperation;
 import parser.Parser;
 
 import java.io.File;
@@ -24,21 +24,21 @@ public class Main {
 //            System.out.println(contents[i]);
 //        new Main().setConfigAttributes();
 
-//        System.out.println(Files.getAllPathsMigration("database\\migrations"));
+        System.out.println(new FileOperation().getAllPathsMigration("database\\migrations"));
 
 
 
 //        System.out.println(p.getTables());
-//        new Main().generateDatabaseTable();
+        new Main().generateDatabaseTable();
 
 
-        CRUD.table("users")
-                .select("id", "name")
-                .where("id", 1)
-                .andWhere("name", "nikhil")
-                .orWhere("id", 2)
-                .andWhere("name", "nagdev")
-                .get();
+//        CRUD.table("users")
+//                .select("id", "name")
+//                .where("id", 1)
+//                .andWhere("name", "nikhil")
+//                .orWhere("id", 2)
+//                .andWhere("name", "nagdev")
+//                .get();
 
 
     }

@@ -3,7 +3,7 @@ package parser;
 import database.Column;
 import database.Database;
 import database.Table;
-import files.Files;
+import files.FileOperation;
 
 import javax.json.*;
 import java.io.*;
@@ -17,7 +17,7 @@ public class Parser {
 
     public Parser(String pathToFile){
         root = pathToFile;
-        files = new Files();
+        files = new FileOperation();
         setJsonConfigObjects(pathToFile);
     }
 
@@ -232,6 +232,6 @@ public class Parser {
     private JsonObject jsonTableObject = null;
     private JsonObject configJsonObject = null;
     private int noOfTables = 0;
-    private Files files = null;
+    private FileOperation files = null;
     private String root = "";
 }
