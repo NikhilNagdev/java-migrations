@@ -31,7 +31,7 @@ public class Main {
 //        System.out.println(p.getTables());
         new Main().generateDatabaseTable();
 
-
+//
 //        CRUD.table("users")
 //                .select("id", "name")
 //                .where("id", 1)
@@ -47,10 +47,18 @@ public class Main {
         Parser p = new Parser("database");
         QueryBuilder qb = new QueryBuilder("", null);
         List<Table> tables = p.getTables();
+        CRUD crud = new CRUD(p.getDatabase());
+        int i = 0;
         for(Table table : tables){
+            i++;
             System.out.println(qb.generateTableQuery(table));
-            System.out.println("================================================================");
+            if(crud.runCreate(qb.generateTableQuery(table)))
+                System.out.println("Table created");
+            else
+                System.out.println("There was some problem while creating table");
+            System.out.println();
         }
+        System.out.println(i);
 
     }
 

@@ -47,7 +47,7 @@ public class QueryBuilder implements DefaultLength {
                         " BIGINT" +
                         addLengthAttribute(column) +
                         addUnsignedAttribute(column) +
-                        (column.isPrimarykey() ? " AUTO INCREMENT " : "") +
+                        (column.isPrimarykey() ? " AUTO_INCREMENT " : "") +
                         addDefaultAttribute(column) +
                         ",\n";
 
@@ -111,7 +111,7 @@ public class QueryBuilder implements DefaultLength {
 //                ON DELETE CASCADE,
         String foreignKey = "CONSTRAINT FOREIGN KEY (" + column.getColumn_name() + ")" +
                 " REFERENCES " + column.getForeignKeyAttributes().get("on_table") + "(" + column.getForeignKeyAttributes().get("references") + ")" +
-                (column.getForeignKeyAttributes().get("on_delete") != null ? " ON_DELETE " + column.getForeignKeyAttributes().get("on_delete") : "");
+                (column.getForeignKeyAttributes().get("on_delete") != null ? " ON DELETE " + column.getForeignKeyAttributes().get("on_delete") : "");
         System.out.println("=================================================");
         System.out.println(foreignKey);
         System.out.println("=================================================");

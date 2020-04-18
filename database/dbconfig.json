@@ -1,7 +1,7 @@
 {
   "DB_USERNAME" : "root",
   "DB_PASSWORD" : "",
-  "DB_NAME" : "restodb",
+  "DB_NAME" : "test",
   "DB_PORT" : "3306",
   "DB_HOST" : "localhost",
   "URL" : "jdbc:mysql://"
