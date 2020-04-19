@@ -1,15 +1,10 @@
 package files;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.FileInputStream;
+import java.io.*;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.nio.file.Files;
 
 public class FileOperation {
@@ -69,6 +64,33 @@ public class FileOperation {
                 }
             }
         });
+    }
+
+    public void createMigrationFile(String tableName, String type){
+
+//        File myObj = new File("database\\migrations\\" + this.getCurrentTimestamp() + "_" + type + "_" + tableName + ".json");
+        try {
+            FileWriter myWriter = new FileWriter("database\\migrations\\" + this.getCurrentTimestamp() + "_" + type + "_" + tableName + ".json");
+            myWriter.write(constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
+            System.out.println(constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
+            myWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        try {
+//            if (myObj.createNewFile()) {
+//                System.out.println("File created: " + myObj.getName());
+//            } else {
+//                System.out.println("File already exists.");
+//            }
+//        } catch (IOException e) {
+//            System.out.println("Exception while creating migration file: " + e);
+//        }
+
+    }
+
+    private String getCurrentTimestamp(){
+        return new SimpleDateFormat("yyyy_MM_dd_HHmmss").format(new Date());
     }
 
 

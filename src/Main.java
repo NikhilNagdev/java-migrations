@@ -8,10 +8,19 @@ import parser.Parser;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
+        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HHmmss").format(new Date());
+        System.out.println(timeStamp);
+
+        FileOperation f = new FileOperation();
+        f.createMigrationFile("users", "create");
+
 
 //        File folder = new File("database");
 //        System.out.println(folder.getCanonicalPath());
