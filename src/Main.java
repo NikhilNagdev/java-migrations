@@ -2,6 +2,7 @@
 import database.CRUD;
 import database.Database;
 import database.Table;
+import database.migrations.MigrationCreator;
 import database.querybuilder.QueryBuilder;
 import files.FileOperation;
 import parser.Parser;
@@ -15,12 +16,13 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HHmmss").format(new Date());
-        System.out.println(timeStamp);
 
         FileOperation f = new FileOperation();
-        f.createMigrationFile("questions", "create");
+//        f.createMigrationFile("questions", "create");
+        f.getFileNamesFromFolder("database\\migrations");
 
+        MigrationCreator mc = new MigrationCreator();
+        mc.createMigration("create", "userrs");
 
 //        File folder = new File("database");
 //        System.out.println(folder.getCanonicalPath());
