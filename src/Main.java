@@ -19,7 +19,7 @@ public class Main {
         System.out.println(timeStamp);
 
         FileOperation f = new FileOperation();
-        f.createMigrationFile("users", "create");
+        f.createMigrationFile("questions", "create");
 
 
 //        File folder = new File("database");
