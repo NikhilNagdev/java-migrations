@@ -38,7 +38,7 @@ public class Main {
 
 
 //        System.out.println(p.getTables());
-        new Main().generateDatabaseTable();
+//        new Main().generateDatabaseTable();
 
 //
 //        CRUD.table("users")

@@ -6,6 +6,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.nio.file.Files;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileOperation {
 
@@ -71,15 +73,21 @@ public class FileOperation {
 
     public void createMigrationFile(String tableName, String type){
 
-//        File myObj = new File("database\\migrations\\" + this.getCurrentTimestamp() + "_" + type + "_" + tableName + ".json");
-        try {
-            FileWriter myWriter = new FileWriter("database\\migrations\\" + this.getCurrentTimestamp() + "_" + type + "_" + tableName + ".json");
-            myWriter.write(constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
-            System.out.println(constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
-            myWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!checkIfMigrationAlreadyExists(type, tableName)){
+            try {
+                FileWriter myWriter = new FileWriter("database\\migrations\\" + this.getCurrentTimestamp() + "_" + type + "_" + tableName + ".json");
+                myWriter.write(constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
+                System.out.println(constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
+                myWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            System.out.println("Migration already exists");
         }
+
+//        File myObj = new File("database\\migrations\\" + this.getCurrentTimestamp() + "_" + type + "_" + tableName + ".json");
+
 //        try {
 //            if (myObj.createNewFile()) {
 //                System.out.println("File created: " + myObj.getName());
@@ -90,6 +98,23 @@ public class FileOperation {
 //            System.out.println("Exception while creating migration file: " + e);
 //        }
 
+    }
+
+
+    public boolean checkIfMigrationAlreadyExists(String type, String tableName){
+
+        Pattern pattern = Pattern.compile(type + "_" + tableName + ".json");
+        File folder = new File("database\\migrations");
+        File[] listOfFiles = folder.listFiles();
+        Matcher matcher = null;
+        for(File file : listOfFiles){
+            matcher = pattern.matcher(file.getName() + ".json");
+            if (matcher.find()){
+                System.out.println("TRUE");
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getCurrentTimestamp(){
