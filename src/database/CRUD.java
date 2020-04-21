@@ -31,11 +31,15 @@ public class CRUD {
 
 
 
-    public List<SortedMap<String, Object>> runSelect(String query) {
+    public List<SortedMap<String, Object>> runSelect(String query, List<String> bindings) {
 
         try{
-            PreparedStatement stmt = this.connection.prepareStatement("select * from emp");
-            ResultSet rs = stmt.executeQuery();
+            this.preparedStatement = this.connection.prepareStatement(query);
+            for(int i=0; i<bindings.size(); i++){
+                this.preparedStatement.setObject(i+1, (bindings.get(i)));
+            }
+            System.out.println(preparedStatement);
+            ResultSet rs = this.preparedStatement.executeQuery();
             while (rs.next()) {
                 System.out.println(rs.getInt(1) + " " + rs.getString(2));
             }
@@ -69,6 +73,7 @@ public class CRUD {
 
     private Connection connection = null;
     private Statement statement = null;
+    private PreparedStatement preparedStatement = null;
     private Database database = null;
     private boolean isConnectionInitialized;
 }

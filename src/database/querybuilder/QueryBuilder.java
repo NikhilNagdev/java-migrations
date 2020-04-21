@@ -18,6 +18,7 @@ public class QueryBuilder implements DefaultLength {
         this.whereMap = new ArrayList<Map<String, String>>();
         this.table = tableName;
         this.crud = crud;
+        this.bindings = new ArrayList<String>();
     }
 
     public String generateTableQuery(Table table){
@@ -173,7 +174,8 @@ public class QueryBuilder implements DefaultLength {
     public List<SortedMap<String, Object>> get(){
 
 //        this.crud.select(this.compileSelect());
-        this.compileSelect();
+        System.out.println(this.bindings);
+        this.crud.runSelect(this.compileSelect(), this.bindings);
         return null;
     }
 
@@ -226,8 +228,9 @@ public class QueryBuilder implements DefaultLength {
         Map<String, String> m = new HashMap<String, String>();
         m.put("column", column);
         m.put("operator", operator);
-        m.put("value", value+"");
+        m.put("value", "?");
         this.whereMap.add(m);
+        bindings.add(value+"");
 //        this.wheres.add(l);
         return this;
     }
@@ -241,8 +244,9 @@ public class QueryBuilder implements DefaultLength {
         Map<String, String> m = new HashMap<String, String>();
         m.put("column", column);
         m.put("operator", operator);
-        m.put("value", value+"");
+        m.put("value", "?");
         m.put("whereConditionalOperator", "and");
+        bindings.add(value+"");
         this.whereMap.add(m);
         return this;
     }
@@ -256,8 +260,9 @@ public class QueryBuilder implements DefaultLength {
         Map<String, String> m = new HashMap<String, String>();
         m.put("column", column);
         m.put("operator", operator);
-        m.put("value", value+"");
+        m.put("value", "?");
         m.put("whereConditionalOperator", "or");
+        bindings.add(value+"");
         this.whereMap.add(m);
         return this;
     }
@@ -274,8 +279,10 @@ public class QueryBuilder implements DefaultLength {
         Map<String, String> m = new HashMap<String, String>();
         m.put("column", column);
         m.put("operator", "=");
-        m.put("value", value+"");
+        m.put("value", "?");
         this.whereMap.add(m);
+        bindings.add(value+"");
+
 //        this.wheres.add(l);
         return this;
     }
@@ -289,8 +296,9 @@ public class QueryBuilder implements DefaultLength {
         Map<String, String> m = new HashMap<String, String>();
         m.put("column", column);
         m.put("operator", "=");
-        m.put("value", value+"");
+        m.put("value", "?");
         m.put("whereConditionalOperator", "and");
+        bindings.add(value+"");
         this.whereMap.add(m);
         return this;
     }
@@ -304,8 +312,9 @@ public class QueryBuilder implements DefaultLength {
         Map<String, String> m = new HashMap<String, String>();
         m.put("column", column);
         m.put("operator", "=");
-        m.put("value", value+"");
+        m.put("value", "?");
         m.put("whereConditionalOperator", "or");
+        bindings.add(value+"");
         this.whereMap.add(m);
         return this;
     }
@@ -315,6 +324,7 @@ public class QueryBuilder implements DefaultLength {
     private CRUD crud = null;
     private List<List<String>> wheres;
     private List<Map<String, String>> whereMap;
+    private List<String> bindings = null;
 //    private SortedMap<String, String[]> wheres;
 
 }
