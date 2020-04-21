@@ -41,60 +41,6 @@ public class Parser {
         configJsonObject = configReaderObject.readObject();
     }
 
-
-    public void meth() throws IOException {
-
-//        //get JsonObject from JsonReader
-//        JsonObject jsonObject = jsonReader.readObject();
-//        getTable();
-//        //we can close IO resource and JsonReader now
-//        jsonReader.close();
-//        fis.close();
-//        String name = jsonObject.getString("table_names");
-//        System.out.println(jsonObject.getInt("length"));
-//        JsonArray columns = jsonObject.getJsonArray("columnss");
-//        System.out.println(name);
-
-
-//        for (JsonObject result : columns.getValuesAs(JsonObject.class)) {
-////            System.out.print(result.getJsonObject("from").getString("name"));
-//            for (String key: result.keySet()) {
-//                System.out.println(key);
-//            }
-//        }
-//
-//        //reading arrays from json
-//        JsonArray jsonArray = jsonObject.getJsonArray("phoneNumbers");
-//        long[] numbers = new long[jsonArray.size()];
-//        int index = 0;
-//        for(JsonValue value : jsonArray){
-//            numbers[index++] = Long.parseLong(value.toString());
-//        }
-//        emp.setPhoneNumbers(numbers);
-//
-//        //reading inner object from json object
-//        JsonObject innerJsonObject = jsonObject.getJsonObject("address");
-//        Address address = new Address();
-//        address.setStreet(innerJsonObject.getString("street"));
-//        address.setCity(innerJsonObject.getString("city"));
-//        address.setZipcode(innerJsonObject.getInt("zipcode"));
-//        emp.setAddress(address);
-//
-//        //print employee bean information
-//        System.out.println(name);
-
-//        CREATE TABLE Orders (
-//                OrderID int NOT NULL,
-//                OrderNumber int NOT NULL,
-//                PersonID int,
-//        PRIMARY KEY (OrderID),
-//                CONSTRAINT FOREIGN KEY (PersonID)
-//                REFERENCES Persons(id)
-//);
-
-    }
-
-
     /**
      * This method is used to return the table object that is created as per JSON file
      * @return table object

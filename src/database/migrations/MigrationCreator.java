@@ -2,9 +2,7 @@ package database.migrations;
 
 import files.FileOperation;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -16,7 +14,7 @@ public class MigrationCreator {
     public void createMigration(String type, String tableName){
         if(!this.checkIfMigrationFileExists(type, tableName)){
             this.f.createFileWithContent("database\\migrations", this.getMigrationFileName(type, tableName), constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
-            System.out.println("Migration filo created");
+            System.out.println("Migration file created");
         }else{
             System.out.println("Migration file already exists");
         }
@@ -29,7 +27,7 @@ public class MigrationCreator {
         for(String name : fileNames){
             matcher = pattern.matcher(name);
             if (matcher.find()){
-                System.out.println("TRUE");
+//                System.out.println("TRUE");
                 return true;
             }
         }
