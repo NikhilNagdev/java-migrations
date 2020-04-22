@@ -4,12 +4,9 @@ import constants.DefaultLength;
 import database.CRUD;
 import database.Column;
 import database.Table;
-import parser.Parser;
-
-import java.sql.Connection;
 import java.util.*;
 
-public class QueryBuilder implements DefaultLength {
+public class QueryBuilder {
 
     public QueryBuilder(String tableName, CRUD crud){
         this.columns = new ArrayList<String>();
@@ -170,32 +167,24 @@ public class QueryBuilder implements DefaultLength {
     }
 
 
+    public void clear(){
+        this.whereMap.clear();
+        this.bindings.clear();
+    }
 
     public List<SortedMap<String, Object>> get(){
-
-//        this.crud.select(this.compileSelect());
-//        System.out.println(this.bindings);
-        return  this.crud.runSelect(this.compileSelect(), this.bindings);
+        List<SortedMap<String, Object>> result = this.crud.runSelect(this.compileSelect(), this.bindings);
+        clear();
+        return result;
     }
 
     public String compileSelect(){
         String query = "SELECT ";
-
         for(String column : this.columns){
             query += column + ", ";
         }
-
         String whereQuery = " WHERE ";
-//        for(List<String> where : this.wheres){
-//            if(i == 0)
-//                whereQuery += where.get(0) + where.get(1) + where.get(2);
-//            else
-//                whereQuery +=
-//            i++;
-//        }
-
         for(Map<String, String> map : this.whereMap){
-
             if(map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("and")){
                 whereQuery += " AND " + map.get("column") + map.get("operator") + map.get("value");
             }else if(map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("or")){
@@ -203,14 +192,8 @@ public class QueryBuilder implements DefaultLength {
             }else{
                 whereQuery += map.get("column") + map.get("operator") + map.get("value");
             }
-
-
         }
-
-
         query = query.substring(0,query.length()-2)  + " FROM " + this.table + whereQuery;
-
-        System.out.println(query);
         return query;
 
     }
