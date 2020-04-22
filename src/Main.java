@@ -18,15 +18,9 @@ public class Main {
 //        migrator.runMigrations();
 
         QueryBuilder qb = new QueryBuilder("users", new CRUD(new Parser("database").getDatabase()));
-        qb.select("*")
+        System.out.println(qb.select("*")
             .where("id", "1")
-            .andWhere("name", "nikhil")
-            .get();
-    }
-
-    public void setConfigAttributes(){
-        Database db = p.getDatabase();
-        System.out.println(db.getConnection());
+            .get().get(0).get("name"));
     }
 
     private Parser p = new Parser("database");

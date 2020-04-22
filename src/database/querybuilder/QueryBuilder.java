@@ -174,9 +174,8 @@ public class QueryBuilder implements DefaultLength {
     public List<SortedMap<String, Object>> get(){
 
 //        this.crud.select(this.compileSelect());
-        System.out.println(this.bindings);
-        this.crud.runSelect(this.compileSelect(), this.bindings);
-        return null;
+//        System.out.println(this.bindings);
+        return  this.crud.runSelect(this.compileSelect(), this.bindings);
     }
 
     public String compileSelect(){

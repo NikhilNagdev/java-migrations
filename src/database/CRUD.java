@@ -3,8 +3,10 @@ package database;
 import database.querybuilder.QueryBuilder;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class CRUD {
 
@@ -39,10 +41,7 @@ public class CRUD {
                 this.preparedStatement.setObject(i+1, (bindings.get(i)));
             }
             System.out.println(preparedStatement);
-            ResultSet rs = this.preparedStatement.executeQuery();
-            while (rs.next()) {
-                System.out.println(rs.getInt(1) + " " + rs.getString(2));
-            }
+            return resultSetToCollection(this.preparedStatement.executeQuery());
         }catch (SQLException se) {
 
         }
@@ -64,6 +63,26 @@ public class CRUD {
 //        }
 
         return false;
+
+    }
+
+    private List<SortedMap<String, Object>> resultSetToCollection(ResultSet resultSet){
+        List<SortedMap<String, Object>> result = new ArrayList<SortedMap<String, Object>>();
+        try{
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            int columnCount = resultSetMetaData.getColumnCount();
+            while(resultSet.next()){
+                SortedMap<String, Object> map = new TreeMap<String, Object>();
+                for(int i=1; i<=columnCount; i++){
+                    map.put(resultSetMetaData.getColumnName(i), resultSet.getObject(i));
+                }
+                result.add(map);
+            }
+            return result;
+        }catch(SQLException e){
+
+        }
+        return null;
 
     }
 
