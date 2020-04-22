@@ -155,44 +155,68 @@ public class QueryBuilder {
         return "";
     }
 
-    public QueryBuilder select(String ...columnNames){
 
+    /**
+     * This method is used to take the columns which are to be selected
+     * @param columnNames
+     * @return QueryBuilder
+     */
+    public QueryBuilder select(String ...columnNames){
         for(String column : columnNames){
             this.columns.add(column);
         }
-
 //        this.columns.addAll(Arrays.asList(columnNames));
-
         return this;
     }
 
 
+    /**
+     * This method clears all the things which were used to run the query.
+     * This method is called after the query is run
+     */
     public void clear(){
         this.whereMap.clear();
         this.bindings.clear();
     }
 
+
+    /**
+     * This methods runs the select query and returns the results.
+     * @return results returned by the select query
+     */
     public List<SortedMap<String, Object>> get(){
         List<SortedMap<String, Object>> result = this.crud.runSelect(this.compileSelect(), this.bindings);
         clear();
         return result;
     }
 
+    /**
+     * This method is used to generate a select query with all the things used with it.
+     * @return
+     */
     public String compileSelect(){
         String query = "SELECT ";
+        //Adding Columns to the query
         for(String column : this.columns){
             query += column + ", ";
         }
+
+        //Adding wheres to select
         String whereQuery = " WHERE ";
-        for(Map<String, String> map : this.whereMap){
-            if(map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("and")){
-                whereQuery += " AND " + map.get("column") + map.get("operator") + map.get("value");
-            }else if(map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("or")){
-                whereQuery += " OR " + map.get("column") + map.get("operator") + map.get("value");
-            }else{
-                whereQuery += map.get("column") + map.get("operator") + map.get("value");
+        if(!whereMap.isEmpty()) {
+            for (Map<String, String> map : this.whereMap) {
+                if (map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("and")) {
+                    whereQuery += " AND " + map.get("column") + map.get("operator") + map.get("value");
+                } else if (map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("or")) {
+                    whereQuery += " OR " + map.get("column") + map.get("operator") + map.get("value");
+                } else {
+                    whereQuery += map.get("column") + map.get("operator") + map.get("value");
+                }
             }
+        }else{
+            whereQuery += "1";
         }
+
         query = query.substring(0,query.length()-2)  + " FROM " + this.table + whereQuery;
         return query;
 
@@ -307,6 +331,5 @@ public class QueryBuilder {
     private List<List<String>> wheres;
     private List<Map<String, String>> whereMap;
     private List<String> bindings = null;
-//    private SortedMap<String, String[]> wheres;
 
 }
