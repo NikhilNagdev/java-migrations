@@ -192,7 +192,7 @@ public class QueryBuilder {
 
     /**
      * This method is used to generate a select query with all the things used with it.
-     * @return
+     * @return the generated selected story
      */
     public String compileSelect(){
         String query = "SELECT ";
@@ -222,6 +222,14 @@ public class QueryBuilder {
 
     }
 
+
+    /**
+     * This method is used to add a where clause to a query.
+     * @param column column on which operation has to be performed
+     * @param operator operator between the value and the column
+     * @param value Value to be matched with the column
+     * @return QueryBuilder
+     */
     public QueryBuilder where(String column, String operator, Object value){
 //        String[] sarray = new String[2];
 //        sarray[0] = column;
@@ -241,6 +249,13 @@ public class QueryBuilder {
         return this;
     }
 
+    /**
+     * This method is used to add a AND where clause to a query.
+     * @param column column on which operation has to be performed
+     * @param operator operator between the value and the column
+     * @param value Value to be matched with the column
+     * @return QueryBuilder
+     */
     public QueryBuilder andWhere(String column, String operator, Object value){
 //        List<String> l = new ArrayList<String>();
 //        l.add(column);
@@ -257,6 +272,13 @@ public class QueryBuilder {
         return this;
     }
 
+    /**
+     * This method is used to add a OR where clause to a query.
+     * @param column column on which operation has to be performed
+     * @param operator operator between the value and the column
+     * @param value Value to be matched with the column
+     * @return QueryBuilder
+     */
     public QueryBuilder orWhere(String column, String operator, Object value){
 //        List<String> l = new ArrayList<String>();
 //        l.add(column);
@@ -273,6 +295,13 @@ public class QueryBuilder {
         return this;
     }
 
+    /**
+     * This method is used to add a where clause to a query.
+     * The default operator is "=" between column and the value
+     * @param column column on which operation has to be performed
+     * @param value Value to be matched with the column
+     * @return QueryBuilder
+     */
     public QueryBuilder where(String column, Object value){
 //        String[] sarray = new String[2];
 //        sarray[0] = column;
@@ -293,6 +322,13 @@ public class QueryBuilder {
         return this;
     }
 
+    /**
+     * This method is used to add a AND where clause to a query.
+     * The default operator is "=" between column and the value
+     * @param column column on which operation has to be performed
+     * @param value Value to be matched with the column
+     * @return QueryBuilder
+     */
     public QueryBuilder andWhere(String column, Object value){
 //        List<String> l = new ArrayList<String>();
 //        l.add(column);
@@ -309,6 +345,13 @@ public class QueryBuilder {
         return this;
     }
 
+    /**
+     * This method is used to add a OR where clause to a query.
+     * The default operator is "=" between column and the value
+     * @param column column on which operation has to be performed
+     * @param value Value to be matched with the column
+     * @return QueryBuilder
+     */
     public QueryBuilder orWhere(String column, Object value){
 //        List<String> l = new ArrayList<String>();
 //        l.add(column);
