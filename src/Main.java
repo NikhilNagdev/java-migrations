@@ -18,11 +18,14 @@ public class Main {
 //        migrator.runMigrations();
 
         QueryBuilder qb = new QueryBuilder("users", new CRUD(new Parser("database").getDatabase()));
-        System.out.println(qb.select("*")
-            .where("id", "1")
-            .get().get(0).get("name"));
+        System.out.println(qb
+                .select("*")
+                .join("roles", "roles.id", "users.id")
+                .leftJoin("roles", "roles.id", "=", "users.id")
+                .where("id", "1")
+                .get()
+        );
     }
 
     private Parser p = new Parser("database");
-
 }

@@ -13,6 +13,7 @@ public class QueryBuilder {
 //        this.wheres = new TreeMap<String, String[]>();
         this.wheres = new ArrayList<List<String>>();
         this.whereMap = new ArrayList<Map<String, String>>();
+        this.joins = new ArrayList<Map<String, String>>();
         this.table = tableName;
         this.crud = crud;
         this.bindings = new ArrayList<String>();
@@ -185,9 +186,11 @@ public class QueryBuilder {
      * @return results returned by the select query
      */
     public List<SortedMap<String, Object>> get(){
-        List<SortedMap<String, Object>> result = this.crud.runSelect(this.compileSelect(), this.bindings);
+        this.compileSelect();
+//        List<SortedMap<String, Object>> result = this.crud.runSelect(this.compileSelect(), this.bindings);
         clear();
-        return result;
+//        return result;
+        return null;
     }
 
     /**
@@ -196,30 +199,62 @@ public class QueryBuilder {
      */
     public String compileSelect(){
         String query = "SELECT ";
+
         //Adding Columns to the query
         for(String column : this.columns){
             query += column + ", ";
         }
 
-        //Adding wheres to select
-        String whereQuery = " WHERE ";
+        query = query.substring(0,query.length()-2)
+                + " FROM "
+                + this.table
+                + this.getJoinClause()
+                + this.getWhereClause();
+//        System.out.println(query);
+        return query;
+
+    }
+
+
+    /**
+     * This methods generates the join clause for the select query
+     * @return join clause
+     */
+    private String getJoinClause(){
+        String joinClause = "";
+        if(!joins.isEmpty()){
+            for(Map<String, String> map : this.joins){
+                if(map.containsKey("joinType")){
+                    joinClause += " " + map.get("joinType") + " JOIN ON " + map.get("onTable") + " " + map.get("column1") + " " + map.get("operator") + " " + map.get("column2");
+                }else{
+                    joinClause += " JOIN ON " + map.get("onTable") + " " + map.get("column1") + " " + map.get("operator") + " " + map.get("column2");
+                }
+            }
+        }
+        System.out.println(joinClause);
+        return joinClause;
+    }
+
+    /**
+     * This methods generates the where clause the query
+     * @return where clause
+     */
+    private String getWhereClause(){
+        String whereClause = " WHERE ";
         if(!whereMap.isEmpty()) {
             for (Map<String, String> map : this.whereMap) {
                 if (map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("and")) {
-                    whereQuery += " AND " + map.get("column") + map.get("operator") + map.get("value");
+                    whereClause += " AND " + map.get("column") + map.get("operator") + map.get("value");
                 } else if (map.containsKey("whereConditionalOperator") && map.get("whereConditionalOperator").equalsIgnoreCase("or")) {
-                    whereQuery += " OR " + map.get("column") + map.get("operator") + map.get("value");
+                    whereClause += " OR " + map.get("column") + map.get("operator") + map.get("value");
                 } else {
-                    whereQuery += map.get("column") + map.get("operator") + map.get("value");
+                    whereClause += map.get("column") + map.get("operator") + map.get("value");
                 }
             }
         }else{
-            whereQuery += "1";
+            whereClause += "1";
         }
-
-        query = query.substring(0,query.length()-2)  + " FROM " + this.table + whereQuery;
-        return query;
-
+        return whereClause;
     }
 
 
@@ -368,11 +403,124 @@ public class QueryBuilder {
         return this;
     }
 
+
+    /**
+     * This method is used to add a join clause to the select query
+     * @param onTable the table to join on
+     * @param column1 the column1 for column condition
+     * @param operator operator between two columns
+     * @param column2 the column1 for column condition
+     * @return QueryBuilder
+     */
+    public QueryBuilder join(String onTable, String column1, String operator, String column2){
+        Map<String, String> joinMap = new HashMap<String, String>();
+        joinMap.put("onTable", onTable);
+        joinMap.put("column1", column1);
+        joinMap.put("operator", operator);
+        joinMap.put("column2", column2);
+        this.joins.add(joinMap);
+        return this;
+    }
+
+    /**
+     * This method is used to add a left join clause to the select query
+     * @param onTable the table to join on
+     * @param column1 the column1 for column condition
+     * @param operator operator between two columns
+     * @param column2 the column1 for column condition
+     * @return QueryBuilder
+     */
+    public QueryBuilder leftJoin(String onTable, String column1, String operator, String column2){
+        Map<String, String> joinMap = new HashMap<String, String>();
+        joinMap.put("joinType", "LEFT");
+        joinMap.put("onTable", onTable);
+        joinMap.put("column1", column1);
+        joinMap.put("operator", operator);
+        joinMap.put("column2", column2);
+        this.joins.add(joinMap);
+        return this;
+    }
+
+    /**
+     * This method is used to add a right join clause to the select query
+     * @param onTable the table to join on
+     * @param column1 the column1 for column condition
+     * @param operator operator between two columns
+     * @param column2 the column1 for column condition
+     * @return QueryBuilder
+     */
+    public QueryBuilder rightJoin(String onTable, String column1, String operator, String column2){
+        Map<String, String> joinMap = new HashMap<String, String>();
+        joinMap.put("jointType", "right");
+        joinMap.put("onTable", onTable);
+        joinMap.put("column1", column1);
+        joinMap.put("operator", operator);
+        joinMap.put("column2", column2);
+        this.joins.add(joinMap);
+        return this;
+    }
+
+    /**
+     * This method is used to add a join clause to the select query.
+     * Here the operator between columns is by defualt "="
+     * @param onTable the table to join on
+     * @param column1 the column1 for column condition
+     * @param column2 the column1 for column condition
+     * @return QueryBuilder
+     */
+    public QueryBuilder join(String onTable, String column1, String column2){
+        Map<String, String> joinMap = new HashMap<String, String>();
+        joinMap.put("onTable", onTable);
+        joinMap.put("column1", column1);
+        joinMap.put("operator", "=");
+        joinMap.put("column2", column2);
+        this.joins.add(joinMap);
+        return this;
+    }
+
+    /**
+     * This method is used to add a left join clause to the select query.
+     * Here the operator between columns is by defualt "="
+     * @param onTable the table to join on
+     * @param column1 the column1 for column condition
+     * @param column2 the column1 for column condition
+     * @return QueryBuilder
+     */
+    public QueryBuilder leftJoin(String onTable, String column1, String column2){
+        Map<String, String> joinMap = new HashMap<String, String>();
+        joinMap.put("joinType", "LEFT");
+        joinMap.put("onTable", onTable);
+        joinMap.put("column1", column1);
+        joinMap.put("operator", "=");
+        joinMap.put("column2", column2);
+        this.joins.add(joinMap);
+        return this;
+    }
+
+    /**
+     * This method is used to add a right join clause to the select query.
+     * Here the operator between columns is by defualt "="
+     * @param onTable the table to join on
+     * @param column1 the column1 for column condition
+     * @param column2 the column1 for column condition
+     * @return QueryBuilder
+     */
+    public QueryBuilder rightJoin(String onTable, String column1, String column2){
+        Map<String, String> joinMap = new HashMap<String, String>();
+        joinMap.put("jointType", "right");
+        joinMap.put("onTable", onTable);
+        joinMap.put("column1", column1);
+        joinMap.put("operator", "=");
+        joinMap.put("column2", column2);
+        this.joins.add(joinMap);
+        return this;
+    }
+
     private List<String> columns;
     private String table = "";
     private CRUD crud = null;
     private List<List<String>> wheres;
     private List<Map<String, String>> whereMap;
     private List<String> bindings = null;
-
+    private List<Map<String, String>> joins = null;
 }
