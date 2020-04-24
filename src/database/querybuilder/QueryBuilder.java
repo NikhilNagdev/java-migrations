@@ -40,6 +40,17 @@ public class QueryBuilder {
 
                 primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
 
+            }if(columnDatatype.equalsIgnoreCase("tinyint")){
+                query += column.getColumn_name() +
+                        " TINYINT" +
+                        addLengthAttribute(column) +
+                        addUnsignedAttribute(column) +
+                        (column.isPrimarykey() ? " AUTO_INCREMENT " : "")
+                        + addDefaultAttribute(column)
+                        + ",\n";
+
+                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
+
             }else if(columnDatatype.equalsIgnoreCase("biginteger") || columnDatatype.equalsIgnoreCase("bigint")){
 
                 query += column.getColumn_name() +
@@ -187,10 +198,9 @@ public class QueryBuilder {
      */
     public List<SortedMap<String, Object>> get(){
         this.compileSelect();
-//        List<SortedMap<String, Object>> result = this.crud.runSelect(this.compileSelect(), this.bindings);
+        List<SortedMap<String, Object>> result = this.crud.runSelect(this.compileSelect(), this.bindings);
         clear();
-//        return result;
-        return null;
+        return result;
     }
 
     /**
@@ -210,7 +220,7 @@ public class QueryBuilder {
                 + this.table
                 + this.getJoinClause()
                 + this.getWhereClause();
-//        System.out.println(query);
+        System.out.println(query);
         return query;
 
     }
@@ -227,7 +237,7 @@ public class QueryBuilder {
                 if(map.containsKey("joinType")){
                     joinClause += " " + map.get("joinType") + " JOIN ON " + map.get("onTable") + " " + map.get("column1") + " " + map.get("operator") + " " + map.get("column2");
                 }else{
-                    joinClause += " JOIN ON " + map.get("onTable") + " " + map.get("column1") + " " + map.get("operator") + " " + map.get("column2");
+                    joinClause += " JOIN " + map.get("onTable") + " ON " + map.get("column1") + " " + map.get("operator") + " " + map.get("column2");
                 }
             }
         }
@@ -256,7 +266,6 @@ public class QueryBuilder {
         }
         return whereClause;
     }
-
 
     /**
      * This method is used to add a where clause to a query.
@@ -514,6 +523,18 @@ public class QueryBuilder {
         joinMap.put("column2", column2);
         this.joins.add(joinMap);
         return this;
+    }
+
+    public boolean insert(List<LinkedHashMap<String, Object>> values){
+
+        return this.crud.runInsert(this.compileInsert(values));
+
+    }
+
+    private String compileInsert(List<LinkedHashMap<String, Object>> values) {
+
+        String query = "INSERT INTO ";
+
     }
 
     private List<String> columns;

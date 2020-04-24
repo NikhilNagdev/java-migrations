@@ -8,6 +8,11 @@ public class Column {
     private String datatype = null;
     private int length = 0;
     private boolean is_primary_key;
+    private boolean not_null = true;
+    private Object defaultValue = null;
+    private boolean isUnsigned;
+    private boolean isForeignKey;
+    private Map<String, String> foreignKeyAttributes;
 
     public boolean isForeignKey() {
         return isForeignKey;
@@ -24,12 +29,6 @@ public class Column {
     public void setForeignKeyAttributes(Map<String, String> foreignKeyAttributes) {
         this.foreignKeyAttributes = foreignKeyAttributes;
     }
-
-    private boolean not_null = true;
-    private Object defaultValue = null;
-    private boolean isUnsigned;
-    private boolean isForeignKey;
-    private Map<String, String> foreignKeyAttributes;
 
     public void setColumn_name(String column_name) {
         this.column_name = column_name;
