@@ -527,14 +527,40 @@ public class QueryBuilder {
 
     public boolean insert(List<LinkedHashMap<String, Object>> values){
 
-        return this.crud.runInsert(this.compileInsert(values));
+        List<List<Object>> bindings = new ArrayList<>();
+
+        for(LinkedHashMap<String, Object> value : values){
+            List<Object> binding = new ArrayList<>();
+            for(String column : value.keySet()){
+                binding.add(value.get(column));
+            }
+            bindings.add(binding);
+        }
+        System.out.println(bindings);
+        return this.crud.runInsert(this.compileInsert(values), bindings);
 
     }
 
     private String compileInsert(List<LinkedHashMap<String, Object>> values) {
 
-        String query = "INSERT INTO ";
+        String query = "INSERT INTO " + this.table + " ";
+        String columns = "";
+        String valuesInsert = " VALUES ";
+        boolean areColumnIntialized = false;
 
+        for(LinkedHashMap<String, Object> value : values){
+            valuesInsert += "(";
+            for(String column : value.keySet()){
+                if(!areColumnIntialized)
+                    columns += column + ", ";
+                valuesInsert += "?, ";
+            }
+            valuesInsert = valuesInsert.substring(0, valuesInsert.length() - 2)  + "), ";
+            areColumnIntialized = true;
+        }
+        query += "(" + columns.substring(0, columns.length() - 2) + ")"  + valuesInsert.substring(0, valuesInsert.length() - 2);
+        System.out.println(query);
+        return query;
     }
 
     private List<String> columns;

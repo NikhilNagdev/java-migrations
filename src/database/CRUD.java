@@ -66,6 +66,24 @@ public class CRUD {
 
     }
 
+    public boolean runInsert(String query, List<List<Object>> bindings){
+        int i = 1, j = 0;
+        try{
+            this.preparedStatement = this.connection.prepareStatement(query);
+            for(List<Object> binding : bindings){
+                for(Object value : binding){
+                    this.preparedStatement.setObject(i, value);
+                    i++;
+                }
+            }
+            System.out.println("PREPARED " + preparedStatement);
+            return this.preparedStatement.executeUpdate() > 0;
+        }catch (SQLException se) {
+            System.out.println("Exception " + se);
+        }
+        return true;
+    }
+
     private List<SortedMap<String, Object>> resultSetToCollection(ResultSet resultSet){
         List<SortedMap<String, Object>> result = new ArrayList<SortedMap<String, Object>>();
         try{
