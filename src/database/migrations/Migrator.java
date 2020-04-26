@@ -15,6 +15,7 @@ public class Migrator {
         this.parser = new Parser("database");
         this.crud = new CRUD(parser.getDatabase());
         this.queryBuilder = new QueryBuilder("", null);
+        this.migration = new Migration(crud);
     }
 
     public void runMigrations(){
@@ -66,4 +67,5 @@ public class Migrator {
     private Parser parser = null;
     private CRUD crud = null;
     private QueryBuilder queryBuilder = null;
+    private Migration migration = null;
 }
