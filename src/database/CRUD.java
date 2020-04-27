@@ -55,6 +55,7 @@ public class CRUD {
             try {
 
                 System.out.println("boolean : " + this.statement.execute(query));
+                return true;
             }catch(SQLException se){
                 System.out.println("Exception while creating tables: " + se);
             }
@@ -106,6 +107,10 @@ public class CRUD {
 
     public void initConnection(){
         this.connection = this.database.getConnection();
+    }
+
+    public Database getDatabase(){
+       return this.database;
     }
 
     private Connection connection = null;

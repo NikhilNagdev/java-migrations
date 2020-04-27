@@ -22,8 +22,10 @@ public class Migrator {
         createMigrationTable();
         List<Table> tables = parser.getTables();
         for(Table table : tables){
-            if(crud.runCreate(queryBuilder.generateTableQuery(table)))
+            if(crud.runCreate(queryBuilder.generateTableQuery(table))){
+                migration.addMigrationEntry(table.getTableName());
                 System.out.println("Table created");
+            }
             else
                 System.out.println("There was some problem while creating table");
             System.out.println();
@@ -31,41 +33,49 @@ public class Migrator {
     }
 
     private void createMigrationTable(){
-        Table table = new Table();
-        table.setTableName("migrations");
-        List<Column> columns = new ArrayList<Column>();
-        Column column = new Column();
 
-        column.setColumn_name("id");
-        column.setDatatype("biginteger");
-        column.setUnsigned(true);
-        column.setIs_primary_key(true);
-        column.setNot_null(true);
+        if (!migration.doMigrationTableExists()) {
+            Table table = new Table();
+            table.setTableName("migrations");
+            List<Column> columns = new ArrayList<Column>();
+            Column column = new Column();
 
-        Column migrationName = new Column();
+            column.setColumn_name("id");
+            column.setDatatype("biginteger");
+            column.setUnsigned(true);
+            column.setIs_primary_key(true);
+            column.setNot_null(true);
 
-        migrationName.setColumn_name("name");
-        migrationName.setDatatype("string");
-        migrationName.setNot_null(true);
+            Column migrationName = new Column();
 
-        Column isMigrationRan = new Column();
+            migrationName.setColumn_name("name");
+            migrationName.setDatatype("string");
+            migrationName.setNot_null(true);
 
-        isMigrationRan.setColumn_name("isMigrationRan");
-        isMigrationRan.setDatatype("tinyint");
-        isMigrationRan.setLength(1);
-        isMigrationRan.setNot_null(true);
+            Column isMigrationRan = new Column();
 
-        columns.add(column);
-        columns.add(migrationName);
-        columns.add(isMigrationRan);
-        table.setColumns(columns);
-        System.out.println(table);
-        this.crud.runCreate(this.queryBuilder.generateTableQuery(table));
-        System.out.println("Help");
+            isMigrationRan.setColumn_name("isMigrationRan");
+            isMigrationRan.setDatatype("tinyint");
+            isMigrationRan.setLength(1);
+            isMigrationRan.setNot_null(true);
+
+            columns.add(column);
+            columns.add(migrationName);
+            columns.add(isMigrationRan);
+            table.setColumns(columns);
+            System.out.println(table);
+            this.crud.runCreate(this.queryBuilder.generateTableQuery(table));
+            System.out.println("Help");
+            isMigrationTableCreated = true;
+        }/*else{
+            System.out.println("Migration table is already existing");
+        }*/
+
     }
 
     private Parser parser = null;
     private CRUD crud = null;
     private QueryBuilder queryBuilder = null;
     private Migration migration = null;
+    private static boolean isMigrationTableCreated;
 }
