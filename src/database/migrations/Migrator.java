@@ -21,13 +21,19 @@ public class Migrator {
     public void runMigrations(){
         createMigrationTable();
         List<Table> tables = parser.getTables();
+        List<String> ranMigrations = this.migration.getRanMigrations();
         for(Table table : tables){
-            if(crud.runCreate(queryBuilder.generateTableQuery(table))){
-                migration.addMigrationEntry(table.getTableName());
-                System.out.println("Table created");
+            if(!ranMigrations.contains(this.migration.getMigrationName(table.getTableName()))){
+                if(crud.runCreate(queryBuilder.generateTableQuery(table))){
+                    migration.addMigrationEntry(table.getTableName());
+                    System.out.println("Table created");
+                }
+                else
+                    System.out.println("There was some problem while creating table");
+            }else{
+                System.out.println("Migration already ran");
             }
-            else
-                System.out.println("There was some problem while creating table");
+
             System.out.println();
         }
     }

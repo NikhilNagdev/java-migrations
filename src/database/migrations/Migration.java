@@ -8,6 +8,7 @@ import parser.Parser;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,6 +61,17 @@ public class Migration {
                 .get().isEmpty()
         );
 
+    }
+
+    public List<String> getRanMigrations(){
+        List<String> finalResults = new ArrayList<String>();
+        List<SortedMap<String, Object>> results = this.queryBuilder
+                                                .select("*")
+                                                .get();
+        for(SortedMap<String, Object> result : results){
+            finalResults.add((String)result.get("name"));
+        }
+        return finalResults;
     }
 
 

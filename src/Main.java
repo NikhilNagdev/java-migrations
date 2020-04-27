@@ -14,9 +14,9 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        MigrationCreator mc = new MigrationCreator();
-        mc.createMigration("create", "users");
-        mc.createMigration("create", "questions");
+//        MigrationCreator mc = new MigrationCreator();
+//        mc.createMigration("create", "users");
+//        mc.createMigration("create", "questions");
 
         Migrator migrator = new Migrator();
         migrator.runMigrations();
