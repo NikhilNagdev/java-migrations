@@ -25,14 +25,6 @@ public class CRUD {
         }
     }
 
-//    public static QueryBuilder table(String tableName) {
-//
-////        return new QueryBuilder(tableName, new CRUD());
-//
-//    }
-
-
-
     public List<SortedMap<String, Object>> runSelect(String query, List<String> bindings) {
 
         try{
@@ -40,10 +32,10 @@ public class CRUD {
             for(int i=0; i<bindings.size(); i++){
                 this.preparedStatement.setObject(i+1, (bindings.get(i)));
             }
-            System.out.println(preparedStatement);
+//            System.out.println(preparedStatement);
             return resultSetToCollection(this.preparedStatement.executeQuery());
         }catch (SQLException se) {
-
+            System.out.println("Exception while running select " + se);
         }
         return null;
 

@@ -82,7 +82,7 @@ public class Database {
     public Connection getConnection(){
         try {
 //            return DriverManager.getConnection("jdbc:mysql://localhost:3306/restodb", "root", "");
-            System.out.println("Connection String: " + this.getConnectionString());
+//            System.out.println("Connection String: " + this.getConnectionString());
             this.setConnection(DriverManager.getConnection(this.getConnectionString(), this.getDbUsername(), this.getDbPassword()));
             return this.connection;
         } catch (SQLException e) {

@@ -19,6 +19,7 @@ public class Migrator {
     }
 
     public void runMigrations(){
+        boolean flag = true;
         createMigrationTable();
         List<Table> tables = parser.getTables();
         List<String> ranMigrations = this.migration.getRanMigrations();
@@ -27,14 +28,20 @@ public class Migrator {
                 if(crud.runCreate(queryBuilder.generateTableQuery(table))){
                     migration.addMigrationEntry(table.getTableName());
                     System.out.println("Table created");
+                    if(flag)
+                    flag = false;
                 }
                 else
                     System.out.println("There was some problem while creating table");
             }else{
-                System.out.println("Migration already ran");
+                if(!flag)
+                    flag = true;
             }
-
-            System.out.println();
+        }
+        if(flag){
+            System.out.println("All Migrations are Migrated...");
+        }else{
+            System.out.println("Migrated Successfully");
         }
     }
 

@@ -38,7 +38,6 @@ public class FileOperation {
         for (File listOfFile : listOfFiles) {
             if (listOfFile.isFile()) {
                 paths.add(folderPath + File.separator + listOfFile.getName());
-                System.out.println(listOfFile.getName());
                 noOfTables++;
             }
         }
@@ -55,13 +54,7 @@ public class FileOperation {
     }
 
     public File[] getFilesFromFolder(String folderPath){
-        File folder = new File(folderPath);
-        try {
-            System.out.println(folder.getCanonicalPath());
-        } catch (IOException e) {
-            System.out.println("Exception while doing operation with files " + e);
-        }
-        return folder.listFiles();
+        return new File(folderPath).listFiles();
     }
 
     public List<String> getFileNamesFromFolder(String folderPath){
@@ -71,7 +64,6 @@ public class FileOperation {
         for(File file : files){
             fileNames.add(file.getName());
         }
-        System.out.println(fileNames);
         return fileNames;
     }
 
