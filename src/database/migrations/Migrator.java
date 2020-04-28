@@ -71,7 +71,6 @@ public class Migrator {
             table.setColumns(columns);
             System.out.println(table);
             this.crud.runCreate(this.queryBuilder.generateTableQuery(table));
-            System.out.println("Help");
             isMigrationTableCreated = true;
         }/*else{
             System.out.println("Migration table is already existing");

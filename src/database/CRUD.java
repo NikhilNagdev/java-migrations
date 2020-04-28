@@ -53,14 +53,14 @@ public class CRUD {
 
 //        if(this.isConnectionInitialized){
             try {
-
-                System.out.println("boolean : " + this.statement.execute(query));
+//                System.out.println("boolean : " + );
+                this.statement.execute(query);
                 return true;
             }catch(SQLException se){
                 System.out.println("Exception while creating tables: " + se);
             }
 //        }else{
-            this.initConnection();
+//            this.initConnection();
 //        }
 
         return false;
@@ -99,7 +99,7 @@ public class CRUD {
             }
             return result;
         }catch(SQLException e){
-
+            System.out.println("Exception while converting result set to a collection " + e);
         }
         return null;
 

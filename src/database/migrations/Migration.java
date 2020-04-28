@@ -48,11 +48,11 @@ public class Migration {
 
     public boolean doMigrationTableExists(){
 
-        System.out.println(this.tablesInfo
-                .select("table_name")
-                .where("table_schema", this.crud.getDatabase().getDbName())
-                .andWhere("table_name", "migrations")
-                .get());
+//        System.out.println(this.tablesInfo
+//                .select("table_name")
+//                .where("table_schema", this.crud.getDatabase().getDbName())
+//                .andWhere("table_name", "migrations")
+//                .get());
         return !(
                 this.tablesInfo
                 .select("table_name")

@@ -122,9 +122,6 @@ public class QueryBuilder {
         String foreignKey = "CONSTRAINT FOREIGN KEY (" + column.getColumn_name() + ")" +
                 " REFERENCES " + column.getForeignKeyAttributes().get("on_table") + "(" + column.getForeignKeyAttributes().get("references") + ")" +
                 (column.getForeignKeyAttributes().get("on_delete") != null ? " ON DELETE " + column.getForeignKeyAttributes().get("on_delete") : "");
-        System.out.println("=================================================");
-        System.out.println(foreignKey);
-        System.out.println("=================================================");
         return foreignKey;
 
     }
@@ -220,7 +217,6 @@ public class QueryBuilder {
                 + this.table
                 + this.getJoinClause()
                 + this.getWhereClause();
-        System.out.println(query);
         return query;
 
     }
@@ -241,7 +237,6 @@ public class QueryBuilder {
                 }
             }
         }
-        System.out.println(joinClause);
         return joinClause;
     }
 
@@ -536,7 +531,6 @@ public class QueryBuilder {
             }
             bindings.add(binding);
         }
-        System.out.println(bindings);
         return this.crud.runInsert(this.compileInsert(values), bindings);
 
     }
@@ -559,7 +553,7 @@ public class QueryBuilder {
             areColumnIntialized = true;
         }
         query += "(" + columns.substring(0, columns.length() - 2) + ")"  + valuesInsert.substring(0, valuesInsert.length() - 2);
-        System.out.println(query);
+//        System.out.println(query);
         return query;
     }
 
