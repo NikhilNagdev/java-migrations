@@ -35,7 +35,7 @@ public class Migration {
 
     public String getMigrationName(String tableName){
         List<String> fileNames = fileOperation.getFileNamesFromFolder("database\\migrations");
-        Pattern pattern = Pattern.compile("create_" + tableName + ".json");
+        Pattern pattern = Pattern.compile("create_" + tableName + "_table.json");
         Matcher matcher = null;
         for(String name : fileNames){
             matcher = pattern.matcher(name);
