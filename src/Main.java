@@ -1,4 +1,5 @@
 
+import commands.CommandProcessor;
 import database.CRUD;
 import database.Database;
 import database.migrations.MigrationCreator;
@@ -10,12 +11,13 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
 
+        new CommandProcessor().processCommand(args);
 //        MigrationCreator mc = new MigrationCreator();
 //        mc.createMigration("create", "users");
 //        mc.createMigration("create", "questions");
-
-        Migrator migrator = new Migrator();
-        migrator.runMigrations();
+//
+//        Migrator migrator = new Migrator();
+//        migrator.runMigrations();
 //
 //        QueryBuilder qb = new QueryBuilder("migrations", new CRUD(new Parser("database").getDatabase()));
 //        List<LinkedHashMap<String, Object>> values = new ArrayList<>();

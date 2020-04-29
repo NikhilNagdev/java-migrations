@@ -13,8 +13,9 @@ public class MigrationCreator {
 
     public void createMigration(String type, String tableName){
         if(!this.checkIfMigrationFileExists(type, tableName)){
-            this.f.createFileWithContent("database\\migrations", this.getMigrationFileName(type, tableName), constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
-            System.out.println("Migration file created");
+            String migrationFileName = this.getMigrationFileName(type, tableName);
+            this.f.createFileWithContent("database\\migrations", migrationFileName, constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
+            System.out.println("Migration file created " + "\"" + migrationFileName + "\"");
         }else{
             System.out.println("Migration file already exists");
         }
