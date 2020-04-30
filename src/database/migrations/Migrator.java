@@ -5,7 +5,6 @@ import database.Column;
 import database.Table;
 import database.querybuilder.QueryBuilder;
 import parser.Parser;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,18 +17,23 @@ public class Migrator {
         this.migration = new Migration(crud);
     }
 
+
+    /**
+     * This method is used to run the migrations in migrations folder.
+     */
     public void runMigrations(){
         boolean flag = true;
-        createMigrationTable();
-        List<Table> tables = parser.getTables();
+        createMigrationTable();//creating a migration table to keep a track of migrations that were already ran
+        List<Table> tables = parser.getTables();//getting the Table objects that were created by parser as per the migration files
         List<String> ranMigrations = this.migration.getRanMigrations();
         for(Table table : tables){
+            //checking if migration was already ran
             if(!ranMigrations.contains(this.migration.getMigrationName(table.getTableName()))){
                 if(crud.runCreate(queryBuilder.generateTableQuery(table))){
-                    migration.addMigrationEntry(table.getTableName());
+                    migration.addMigrationEntry(table.getTableName());//logging the ran migration
                     System.out.println("Table created");
                     if(flag)
-                    flag = false;
+                        flag = false;//false indicates migrations are pending to run
                 }
                 else
                     System.out.println("There was some problem while creating table");
@@ -45,6 +49,11 @@ public class Migrator {
         }
     }
 
+
+    /**
+     * This method is used to create a migration table in database to keep
+     * track of ran migrations.
+     */
     private void createMigrationTable(){
 
         if (!migration.doMigrationTableExists()) {
@@ -85,6 +94,7 @@ public class Migrator {
 
     }
 
+    //Variable Declaration
     private Parser parser = null;
     private CRUD crud = null;
     private QueryBuilder queryBuilder = null;

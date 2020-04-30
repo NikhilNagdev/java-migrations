@@ -3,8 +3,6 @@ package database.migrations;
 import database.CRUD;
 import database.querybuilder.QueryBuilder;
 import files.FileOperation;
-import parser.Parser;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,10 +19,18 @@ public class Migration {
         this.crud = crud;
     }
 
+    /**
+     * This methods returns all names of files that are in migration folder
+     * @return List of names of migration file
+     */
     public List<String> getAllMigrationNames(){
         return this.fileOperation.getFileNamesFromFolder("database\\migrations");
     }
 
+    /**
+     * Adding an entry in migration table to indicate that migration was ran
+     * @param tableName
+     */
     public void addMigrationEntry(String tableName){
         List<LinkedHashMap<String, Object>> values = new ArrayList<>();
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -32,6 +38,7 @@ public class Migration {
         values.add(map);
         System.out.println(this.queryBuilder.insert(values));
     }
+
 
     public String getMigrationName(String tableName){
         List<String> fileNames = fileOperation.getFileNamesFromFolder("database\\migrations");
@@ -46,6 +53,11 @@ public class Migration {
         return null;
     }
 
+
+    /**
+     * Checking if the migration table was already in database or not
+     * @return true if table exists otherwise false
+     */
     public boolean doMigrationTableExists(){
 
 //        System.out.println(this.tablesInfo
@@ -63,11 +75,17 @@ public class Migration {
 
     }
 
+
+    /**
+     * Getting the migrations that were ran
+     * @return List of ran migrations
+     */
     public List<String> getRanMigrations(){
         List<String> finalResults = new ArrayList<String>();
-        List<SortedMap<String, Object>> results = this.queryBuilder
-                                                .select("*")
-                                                .get();
+        List<SortedMap<String, Object>> results
+                = this.queryBuilder
+                        .select("*")
+                        .get();
         for(SortedMap<String, Object> result : results){
             finalResults.add((String)result.get("name"));
         }
