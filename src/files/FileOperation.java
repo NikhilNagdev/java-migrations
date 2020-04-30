@@ -61,6 +61,7 @@ public class FileOperation {
         File folder = new File(folderPath);
         List<String> fileNames = new ArrayList<String>();
         File[] files = folder.listFiles();
+        getFilesSortedByFIleName(files);
         for(File file : files){
             fileNames.add(file.getName());
         }

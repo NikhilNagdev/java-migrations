@@ -1,6 +1,5 @@
 package database.migrations;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import constants.Files;
 import files.FileOperation;
 
@@ -25,8 +24,9 @@ public class MigrationCreator {
         if(!this.checkIfMigrationFileExists(name)){
             String migrationFileName = this.getMigrationFileName(name);
             //creating migration with a default template
-            if(this.isMigrationTypeCreate(name))
+            if(this.isMigrationTypeCreate(migrationFileName)){
                 this.fileOperation.createFileWithContent("database\\migrations", migrationFileName, constants.Files.CREATE_TABLE_MIGRATION_STRUCTURE);
+            }
             else
                 this.fileOperation.createFileWithContent("database\\migrations", migrationFileName, Files.ALTER_TABLE_MIGRATION_STRUCTURE);
             System.out.println("Migration file created " + "\"" + migrationFileName + "\"");
@@ -75,7 +75,7 @@ public class MigrationCreator {
     }
 
     private boolean isMigrationTypeCreate(String name){
-        return Pattern.compile("[0-9]{4}_([0-9]{2}_){2}[0-9]{6}_create_.*.json").matcher(name).find();
+        return Pattern.compile("[0-9]{4}_([0-9]{2}_){2}[0-9]{6}_create_.*\\.json").matcher(name).find();
     }
 
     private FileOperation fileOperation;

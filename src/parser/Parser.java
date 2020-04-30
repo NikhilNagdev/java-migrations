@@ -4,9 +4,9 @@ import database.Column;
 import database.Database;
 import database.Table;
 import files.FileOperation;
+import helper.Helper;
 
 import javax.json.*;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.Map;
 
 public class Parser {
 
-    public Parser(String pathToFile){
-        root = pathToFile;
+    public Parser(String rootFolderPath){
+        root = rootFolderPath;
         files = new FileOperation();
-        setJsonConfigObjects(pathToFile);
+        setJsonConfigObjects(rootFolderPath);
     }
 
 
@@ -57,15 +57,19 @@ public class Parser {
      * This method returns the list of table objects generated as per migrations files
      * @return list of table objects
      */
-    public List<Table> getTables(){
+    public Map<String, Table> getTables(){
+        Map<String, Table> tableMaps = new HashMap<String, Table>();
         List<Table> tables = new ArrayList<Table>();
         //getting path of all files that are in migration folder
         List<String> paths = files.getAllPathsMigration(this.root + "\\migrations");
         for(String path : paths){
             setJsonTableObject(path);//setting jsonreader object and jsontable object as per one file
-            tables.add(getTable());
+//            tables.add(getTable());
+            Table table = getTable();
+            tableMaps.put(Helper.getFileType(path) + "_" + table.getTableName(), table);
+            System.out.println(Helper.getFileType(path));
         }
-        return tables;
+        return tableMaps;
     }
 
 
@@ -74,7 +78,7 @@ public class Parser {
      * @return List of column objects
      */
     public List<Column> getColumns(){
-        JsonArray columns = jsonTableObject.getJsonArray("columns");
+        JsonArray columns = jsonTableObject.containsKey("alter_columns") ? jsonTableObject.getJsonArray("alter_columns") : jsonTableObject.getJsonArray("columns");
         List<Column> columnList = new ArrayList<Column>();
         for (JsonObject column : columns.getValuesAs(JsonObject.class)){
             columnList.add(getColumn(column));

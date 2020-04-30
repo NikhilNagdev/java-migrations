@@ -4,9 +4,13 @@ import database.CRUD;
 import database.Column;
 import database.Table;
 import database.querybuilder.QueryBuilder;
+import files.FileOperation;
+import helper.Helper;
 import parser.Parser;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Migrator {
 
@@ -15,6 +19,7 @@ public class Migrator {
         this.crud = new CRUD(parser.getDatabase());
         this.queryBuilder = new QueryBuilder("", null);
         this.migration = new Migration(crud);
+        this.fileOperation = new FileOperation();
     }
 
 
@@ -24,29 +29,45 @@ public class Migrator {
     public void runMigrations(){
         boolean flag = true;
         createMigrationTable();//creating a migration table to keep a track of migrations that were already ran
-        List<Table> tables = parser.getTables();//getting the Table objects that were created by parser as per the migration files
+        Map<String, Table> tableMaps = parser.getTables();//getting the Table objects that were created by parser as per the migration files
+        List<String> allMigrations = this.fileOperation.getFileNamesFromFolder("database\\migrations");
         List<String> ranMigrations = this.migration.getRanMigrations();
-        for(Table table : tables){
-            //checking if migration was already ran
-            if(!ranMigrations.contains(this.migration.getMigrationName(table.getTableName()))){
-                if(crud.runCreate(queryBuilder.generateTableQuery(table))){
-                    migration.addMigrationEntry(table.getTableName());//logging the ran migration
-                    System.out.println("Table created");
-                    if(flag)
-                        flag = false;//false indicates migrations are pending to run
+
+        for(String migrationName : allMigrations){
+            Table table = tableMaps.get(Helper.getFileType(migrationName) + "_" + Helper.getTableNameFromFileName(migrationName));
+            if(!ranMigrations.contains(migrationName)){
+                if(this.isMigrationTypeCreate(migrationName)){
+                    if(crud.runCreate(queryBuilder.generateTableQuery(table))){
+                        migration.addMigrationEntry(table.getTableName());//logging the ran migration
+                        System.out.println("Table created");
+                        if(flag)
+                            flag = false;//false indicates migrations are pending to run
+                    }
                 }
-                else
-                    System.out.println("There was some problem while creating table");
-            }else{
-                if(!flag)
-                    flag = true;
             }
         }
-        if(flag){
-            System.out.println("All Migrations are Migrated...");
-        }else{
-            System.out.println("Migrated Successfully");
-        }
+//
+//        for(Table table : tables){
+//            //checking if migration was already ran
+//            if(!ranMigrations.contains(this.migration.getMigrationName(table.getTableName()))){
+//                if(crud.runCreate(queryBuilder.generateTableQuery(table))){
+//                    migration.addMigrationEntry(table.getTableName());//logging the ran migration
+//                    System.out.println("Table created");
+//                    if(flag)
+//                        flag = false;//false indicates migrations are pending to run
+//                }
+//                else
+//                    System.out.println("There was some problem while creating table");
+//            }else{
+//                if(!flag)
+//                    flag = true;
+//            }
+//        }
+//        if(flag){
+//            System.out.println("All Migrations are Migrated...");
+//        }else{
+//            System.out.println("Migrated Successfully");
+//        }
     }
 
 
@@ -94,10 +115,15 @@ public class Migrator {
 
     }
 
+    private boolean isMigrationTypeCreate(String name){
+        return Pattern.compile("[0-9]{4}_([0-9]{2}_){2}[0-9]{6}_create_.*.json").matcher(name).find();
+    }
+
     //Variable Declaration
     private Parser parser = null;
     private CRUD crud = null;
     private QueryBuilder queryBuilder = null;
     private Migration migration = null;
     private static boolean isMigrationTableCreated;
+    private FileOperation fileOperation = null;
 }
