@@ -2,7 +2,7 @@ package database;
 
 import java.util.Map;
 
-public class Column {
+public class Column implements Comparable<Column> {
 
     private String column_name = null;
     private String datatype = null;
@@ -16,6 +16,29 @@ public class Column {
 
     public boolean isForeignKey() {
         return isForeignKey;
+    }
+
+    @Override
+    public int compareTo(Column column) {
+        return this.column_name.compareTo(column.column_name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Column column = (Column) obj;
+//        System.out.println(this.column_name + " == " + column.column_name);
+        return this.getColumn_name().equals(column.getColumn_name());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.column_name.hashCode();
     }
 
     public void setIsForeignKey(boolean foreignKey) {

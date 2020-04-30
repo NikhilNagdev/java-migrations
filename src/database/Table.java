@@ -18,6 +18,14 @@ public class Table {
         return columns;
     }
 
+    public List<Column> getAlterColumns() {
+        return alterColumns;
+    }
+
+    public void setAlterColumns(List<Column> alterColumns) {
+        this.alterColumns = alterColumns;
+    }
+
     public void setColumns(List<Column> columns) {
         this.columns = columns;
     }
@@ -31,4 +39,5 @@ public class Table {
     }
 
     private List<Column> columns = null;
+    private List<Column> alterColumns = null;
 }

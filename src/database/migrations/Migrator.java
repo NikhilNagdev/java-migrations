@@ -1,5 +1,6 @@
 package database.migrations;
 
+import constants.Files;
 import database.CRUD;
 import database.Column;
 import database.Table;
@@ -40,6 +41,13 @@ public class Migrator {
                     if(crud.runCreate(queryBuilder.generateTableQuery(table))){
                         migration.addMigrationEntry(table.getTableName());//logging the ran migration
                         System.out.println("Table created");
+                        if(flag)
+                            flag = false;//false indicates migrations are pending to run
+                    }
+                }else if(Helper.getFileType(migrationName).equals(Files.ALTER)){
+                    if(crud.runAlter(queryBuilder.generateAlterTableQuery(table))){
+                        migration.addMigrationEntry(table.getTableName());//logging the ran migration
+                        System.out.println("Table Altered");
                         if(flag)
                             flag = false;//false indicates migrations are pending to run
                     }

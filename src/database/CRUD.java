@@ -77,6 +77,10 @@ public class CRUD {
         return true;
     }
 
+    public boolean runAlter(String query) {
+        return false;
+    }
+
     private List<SortedMap<String, Object>> resultSetToCollection(ResultSet resultSet){
         List<SortedMap<String, Object>> result = new ArrayList<SortedMap<String, Object>>();
         try{
@@ -110,6 +114,7 @@ public class CRUD {
     private PreparedStatement preparedStatement = null;
     private Database database = null;
     private boolean isConnectionInitialized;
+
 }
 
 
