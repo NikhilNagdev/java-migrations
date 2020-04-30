@@ -14,7 +14,7 @@ public class CommandProcessor {
     public void processCommand(String[] command){
 
         if(command[1].equals(Commands.CREATE_COMMAND) && command[2].equals(Commands.MIGRATION_COMMAND)){
-            migrationCreator.createMigration(Commands.CREATE_COMMAND, command[3]);
+            migrationCreator.createMigration(command[3]);
         }else if(command[1].equals(Commands.MIGRATE_COMMAND)){
             migrator.runMigrations();
         }else{
