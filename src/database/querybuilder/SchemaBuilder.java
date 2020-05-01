@@ -6,12 +6,12 @@ import database.Table;
 
 public class SchemaBuilder {
 
-    SchemaBuilder(){
+    public SchemaBuilder(){
         columnBuilder = new ColumnBuilder();
     }
 
     public String generateTableQuery(Table table){
-        String query = "CREATE TABLE " + table.getTableName() + "( ";
+        String query = "CREATE TABLE " + table.getTableName() + "(\n";
         String primaryKey = "\nPRIMARY KEY (";
         String foreignKey = "";
         for(Column column : table.getColumns()){
@@ -25,6 +25,13 @@ public class SchemaBuilder {
                     columnDatatype.equalsIgnoreCase("bigint")
             ){
                 query += columnBuilder.getColumnQueryForNumber(column);
+                primaryKey += columnBuilder.addColumnToPrimaryKey(column);
+            }
+            else if(
+                    columnDatatype.equalsIgnoreCase("string") ||
+                    columnDatatype.equalsIgnoreCase("varchar")
+            ){
+                query += columnBuilder.getColumnQueryForString(column);
                 primaryKey += columnBuilder.addColumnToPrimaryKey(column);
             }
 //            else if(columnDatatype.equalsIgnoreCase("string") || columnDatatype.equalsIgnoreCase("varchar")){
@@ -67,7 +74,7 @@ public class SchemaBuilder {
         }else{
             query = query.substring(0,query.length()-1);
         }
-        query +=  ");";
+        query +=  "\n);";
         return query;
 
     }

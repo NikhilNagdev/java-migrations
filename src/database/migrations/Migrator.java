@@ -5,6 +5,7 @@ import database.CRUD;
 import database.Column;
 import database.Table;
 import database.querybuilder.QueryBuilder;
+import database.querybuilder.SchemaBuilder;
 import files.FileOperation;
 import helper.Helper;
 import parser.Parser;
@@ -19,6 +20,7 @@ public class Migrator {
         this.parser = new Parser("database");
         this.crud = new CRUD(parser.getDatabase());
         this.queryBuilder = new QueryBuilder("", null);
+        this.schemaBuilder = new SchemaBuilder();
         this.migration = new Migration(crud);
         this.fileOperation = new FileOperation();
     }
@@ -38,14 +40,14 @@ public class Migrator {
             Table table = tableMaps.get(Helper.getFileType(migrationName) + "_" + Helper.getTableNameFromFileName(migrationName));
             if(!ranMigrations.contains(migrationName)){
                 if(this.isMigrationTypeCreate(migrationName)){
-                    if(crud.runCreate(queryBuilder.generateTableQuery(table))){
+                    if(crud.runCreate(this.schemaBuilder.generateTableQuery(table))){
                         migration.addMigrationEntry(table.getTableName());//logging the ran migration
                         System.out.println("Table created");
                         if(flag)
                             flag = false;//false indicates migrations are pending to run
                     }
                 }else if(Helper.getFileType(migrationName).equals(Files.ALTER)){
-                    if(crud.runAlter(queryBuilder.generateAlterTableQuery(table))){
+                    if(crud.runAlter(this.queryBuilder.generateAlterTableQuery(table))){
                         migration.addMigrationEntry(table.getTableName());//logging the ran migration
                         System.out.println("Table Altered");
                         if(flag)
@@ -115,7 +117,7 @@ public class Migrator {
             columns.add(isMigrationRan);
             table.setColumns(columns);
             System.out.println(table);
-            this.crud.runCreate(this.queryBuilder.generateTableQuery(table));
+            this.crud.runCreate(this.schemaBuilder.generateTableQuery(table));
             isMigrationTableCreated = true;
         }/*else{
             System.out.println("Migration table is already existing");
@@ -131,6 +133,7 @@ public class Migrator {
     private Parser parser = null;
     private CRUD crud = null;
     private QueryBuilder queryBuilder = null;
+    private SchemaBuilder schemaBuilder = null;
     private Migration migration = null;
     private static boolean isMigrationTableCreated;
     private FileOperation fileOperation = null;
