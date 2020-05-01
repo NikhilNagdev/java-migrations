@@ -19,6 +19,7 @@ public class Parser {
         root = rootFolderPath;
         files = new FileOperation();
         setJsonConfigObjects(rootFolderPath);
+        this.tableObjectsMap = new HashMap<String, Table>();
     }
 
 
@@ -47,8 +48,19 @@ public class Parser {
      */
     public Table getTable(){
         Table table = new Table();
-        table.setTableName(jsonTableObject.getString("table_name"));
-        table.setColumns(getColumns());
+        String tableName = jsonTableObject.getString("table_name");
+        table.setTableName(tableName);
+        if(jsonTableObject.containsKey("alter_columns")){
+            if(this.tableObjectsMap.containsKey(tableName)){
+                this.tableObjectsMap.get(tableName).setAlterColumns(getColumns());
+                //this is done because we have to setAlterColumns of the table that is existing
+                return this.tableObjectsMap.get(tableName);
+            }else{
+                System.out.println("Table " + tableName + " doesn't exists");
+            }
+        }else if(jsonTableObject.containsKey("columns")){
+            table.setColumns(getColumns());
+        }
         return table;
     }
 
@@ -58,7 +70,7 @@ public class Parser {
      * @return list of table objects
      */
     public Map<String, Table> getTables(){
-        Map<String, Table> tableMaps = new HashMap<String, Table>();
+        Map<String, Table> tableMap = new HashMap<String, Table>();
         List<Table> tables = new ArrayList<Table>();
         //getting path of all files that are in migration folder
         List<String> paths = files.getAllPathsMigration(this.root + "\\migrations");
@@ -66,10 +78,10 @@ public class Parser {
             setJsonTableObject(path);//setting jsonreader object and jsontable object as per one file
 //            tables.add(getTable());
             Table table = getTable();
-            tableMaps.put(Helper.getFileType(path) + "_" + table.getTableName(), table);
-            System.out.println(Helper.getFileType(path));
+            tableMap.put(Helper.getFileType(path) + "_" + table.getTableName(), table);
+            this.tableObjectsMap.put(table.getTableName(), table);
         }
-        return tableMaps;
+        return tableMap;
     }
 
 
@@ -78,11 +90,13 @@ public class Parser {
      * @return List of column objects
      */
     public List<Column> getColumns(){
-        JsonArray columns = jsonTableObject.containsKey("alter_columns") ? jsonTableObject.getJsonArray("alter_columns") : jsonTableObject.getJsonArray("columns");
+        JsonArray columns = jsonTableObject.containsKey("alter_columns")
+                ? jsonTableObject.getJsonArray("alter_columns") : jsonTableObject.getJsonArray("columns");
         List<Column> columnList = new ArrayList<Column>();
         for (JsonObject column : columns.getValuesAs(JsonObject.class)){
             columnList.add(getColumn(column));
         }
+//        System.out.println(columnList);
         return columnList;
     }
 
@@ -184,4 +198,5 @@ public class Parser {
     private int noOfTables = 0;
     private FileOperation files = null;
     private String root = "";
+    private Map<String, Table> tableObjectsMap = null;
 }

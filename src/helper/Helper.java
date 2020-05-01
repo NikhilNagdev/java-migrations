@@ -28,9 +28,9 @@ public class Helper {
 
     public static String getTableNameFromFileName(String name){
         Pattern pattern = null;
-        if(getFileType(name).equals("add")){
+        if(getFileType(name).equals(Files.ALTER)){
             pattern = Pattern.compile("to_([a-z|_]+)_table");
-        }else if(getFileType(name).equals("create")){
+        }else if(getFileType(name).equals(Files.CREATE)){
             pattern = Pattern.compile("create_([a-z|_]+)_table");
         }
         Matcher matcher = pattern.matcher(name);

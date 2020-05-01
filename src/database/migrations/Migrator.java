@@ -41,15 +41,15 @@ public class Migrator {
             if(!ranMigrations.contains(migrationName)){
                 if(this.isMigrationTypeCreate(migrationName)){
                     if(crud.runCreate(this.schemaBuilder.generateTableQuery(table))){
-                        migration.addMigrationEntry(table.getTableName());//logging the ran migration
-                        System.out.println("Table created");
+                        migration.addMigrationEntry(migrationName);//logging the ran migration
+//                        System.out.println("Table created");
                         if(flag)
                             flag = false;//false indicates migrations are pending to run
                     }
                 }else if(Helper.getFileType(migrationName).equals(Files.ALTER)){
                     if(crud.runAlter(this.queryBuilder.generateAlterTableQuery(table))){
-                        migration.addMigrationEntry(table.getTableName());//logging the ran migration
-                        System.out.println("Table Altered");
+                        migration.addMigrationEntry(migrationName);//logging the ran migration
+//                        System.out.println("Table Altered");
                         if(flag)
                             flag = false;//false indicates migrations are pending to run
                     }
@@ -73,11 +73,11 @@ public class Migrator {
 //                    flag = true;
 //            }
 //        }
-//        if(flag){
-//            System.out.println("All Migrations are Migrated...");
-//        }else{
-//            System.out.println("Migrated Successfully");
-//        }
+        if(flag){
+            System.out.println("All Migrations are Migrated...");
+        }else{
+            System.out.println("Migrated Successfully");
+        }
     }
 
 
@@ -116,7 +116,6 @@ public class Migrator {
             columns.add(migrationName);
             columns.add(isMigrationRan);
             table.setColumns(columns);
-            System.out.println(table);
             this.crud.runCreate(this.schemaBuilder.generateTableQuery(table));
             isMigrationTableCreated = true;
         }/*else{

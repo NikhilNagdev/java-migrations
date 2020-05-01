@@ -29,12 +29,12 @@ public class Migration {
 
     /**
      * Adding an entry in migration table to indicate that migration was ran
-     * @param tableName
+     * @param name
      */
-    public void addMigrationEntry(String tableName){
+    public void addMigrationEntry(String name){
         List<LinkedHashMap<String, Object>> values = new ArrayList<>();
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put("name", this.getMigrationName(tableName));
+        map.put("name", name);
         values.add(map);
         System.out.println(this.queryBuilder.insert(values));
     }

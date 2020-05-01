@@ -34,7 +34,7 @@ public class Table {
     public String toString() {
         return "Table{" +
                 "tableName='" + tableName + '\'' +
-                ", columns=" + columns +
+                ", alterColumns=" + alterColumns +
                 '}';
     }
 

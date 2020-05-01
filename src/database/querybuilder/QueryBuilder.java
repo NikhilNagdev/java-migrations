@@ -27,6 +27,7 @@ public class QueryBuilder {
         String foreignKey = "";
 //        System.out.println(table.getAlterColumns());
 //        System.out.println(table.getColumns());
+//        System.out.println(table);
         for(Column column : table.getAlterColumns()){
             query = "ALTER TABLE " + table.getTableName();
             if(table.getColumns().contains(column)){

@@ -78,6 +78,12 @@ public class CRUD {
     }
 
     public boolean runAlter(String query) {
+        try {
+            this.statement.execute(query);
+            return true;
+        }catch(SQLException se){
+            System.out.println("Exception while altering table: " + se);
+        }
         return false;
     }
 
