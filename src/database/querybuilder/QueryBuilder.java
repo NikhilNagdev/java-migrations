@@ -53,7 +53,7 @@ public class QueryBuilder {
                         + addDefaultAttribute(column)
                         + ",\n";
 
-                primaryKey += column.isPrimarykey() ? column.getColumn_name() : "";
+//                primaryKey += column.isPrimarykey() ? column.getColumn_name() : "";
 
             }if(columnDatatype.equalsIgnoreCase("tinyint")){
                 query += column.getColumn_name() +
@@ -64,7 +64,7 @@ public class QueryBuilder {
                         + addDefaultAttribute(column)
                         + ",\n";
 
-                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
+//                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
 
             }else if(columnDatatype.equalsIgnoreCase("biginteger") || columnDatatype.equalsIgnoreCase("bigint")){
 
@@ -76,7 +76,7 @@ public class QueryBuilder {
                         addDefaultAttribute(column) +
                         ",\n";
 
-                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", ": "";
+//                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", ": "";
 
             }else if(columnDatatype.equalsIgnoreCase("string") || columnDatatype.equalsIgnoreCase("varchar")){
 
@@ -85,7 +85,7 @@ public class QueryBuilder {
                         addLengthAttribute(column) +
                         addDefaultAttribute(column);
 
-                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
+//                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
 
             }else if(columnDatatype.equalsIgnoreCase("text")){
 
@@ -93,7 +93,7 @@ public class QueryBuilder {
                         " TEXT"  +
                         ",\n";
 
-                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
+//                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
 
             }else if(columnDatatype.equalsIgnoreCase("timestamp")){
 
@@ -102,19 +102,16 @@ public class QueryBuilder {
                         addDefaultAttribute(column) +
                         ",\n";
 
-                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
+//                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
 
             }
 
             if(column.isForeignKey()){
-                foreignKey += addForeignKeyAttributes(query, column) + "\n";
+                foreignKey += addForeignKeyAttributes(query, column);
+                query += "ADD " + foreignKey;
             }
-
             System.out.println(query);
-            query += "";
         }
-
-//        System.out.println(query);
         return query;
     }
 
