@@ -1,6 +1,7 @@
 package database.querybuilder;
 
 import constants.DefaultLength;
+import constants.Files;
 import database.CRUD;
 import database.Column;
 import database.Table;
@@ -21,7 +22,7 @@ public class QueryBuilder {
 
 
 
-    public String generateAlterTableQuery(Table table){
+    public String generateAlterTableQuery(Table table, String alertType){
         String query = "";
         String primaryKey = "PRIMARY KEY";
         String foreignKey = "";
@@ -30,9 +31,14 @@ public class QueryBuilder {
 //        System.out.println(table);
         for(Column column : table.getAlterColumns()){
             query = "ALTER TABLE " + table.getTableName();
-            if(table.getColumns().contains(column)){
+//            if(table.getColumns().contains(column)){
+//                query += " MODIFY COLUMN ";
+//            }else{
+//                query += " ADD COLUMN ";
+//            }
+            if(alertType.equals(Files.ALTER_CHANGE)){
                 query += " MODIFY COLUMN ";
-            }else{
+            }else if(alertType.equals(Files.ALTER_ADD)){
                 query += " ADD COLUMN ";
             }
 

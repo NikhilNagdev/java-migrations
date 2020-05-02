@@ -12,6 +12,7 @@ public interface Files {
                     "\n\t\"table_name\": \"\"," +
                     "\n\t\"alter_columns\":[]" + "\n" +
                     "}";
-    String ALTER = "alter";
+    String ALTER_ADD = "alter_add";
+    String ALTER_CHANGE = "alter_change";
     String CREATE = "create";
 }

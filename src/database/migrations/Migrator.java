@@ -47,9 +47,16 @@ public class Migrator {
                         if(flag)
                             flag = false;//false indicates migrations are pending to run
                     }
-                }else if(Helper.getFileType(migrationName).equals(Files.ALTER)){
+                }else if(Helper.getFileType(migrationName).equals(Files.ALTER_ADD)){
                     System.out.println(table);
-                    if(crud.runAlter(this.queryBuilder.generateAlterTableQuery(table))){
+                    if(crud.runAlter(this.queryBuilder.generateAlterTableQuery(table, Files.ALTER_ADD))){
+                        migration.addMigrationEntry(migrationName);//logging the ran migration
+                        table.getColumns().addAll(table.getAlterColumns());
+                        if(flag)
+                            flag = false;//false indicates migrations are pending to run
+                    }
+                }else if(Helper.getFileType(migrationName).equals(Files.ALTER_CHANGE)){
+                    if(crud.runAlter(this.queryBuilder.generateAlterTableQuery(table, Files.ALTER_CHANGE))){
                         migration.addMigrationEntry(migrationName);//logging the ran migration
                         table.getColumns().addAll(table.getAlterColumns());
                         if(flag)
