@@ -35,9 +35,10 @@ public class Migrator {
         Map<String, Table> tableMaps = parser.getTables();//getting the Table objects that were created by parser as per the migration files
         List<String> allMigrations = this.fileOperation.getFileNamesFromFolder("database\\migrations");
         List<String> ranMigrations = this.migration.getRanMigrations();
-
+        System.out.println(tableMaps);
         for(String migrationName : allMigrations){
             Table table = tableMaps.get(Helper.getFileType(migrationName) + "_" + Helper.getTableNameFromFileName(migrationName));
+            System.out.println(Helper.getFileType(migrationName) + "_" + Helper.getTableNameFromFileName(migrationName));
             if(!ranMigrations.contains(migrationName)){
                 if(this.isMigrationTypeCreate(migrationName)){
                     if(crud.runCreate(this.schemaBuilder.generateTableQuery(table))){
@@ -47,9 +48,10 @@ public class Migrator {
                             flag = false;//false indicates migrations are pending to run
                     }
                 }else if(Helper.getFileType(migrationName).equals(Files.ALTER)){
+                    System.out.println(table);
                     if(crud.runAlter(this.queryBuilder.generateAlterTableQuery(table))){
                         migration.addMigrationEntry(migrationName);//logging the ran migration
-//                        System.out.println("Table Altered");
+                        table.getColumns().addAll(table.getAlterColumns());
                         if(flag)
                             flag = false;//false indicates migrations are pending to run
                     }

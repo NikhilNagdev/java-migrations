@@ -25,7 +25,7 @@ public class QueryBuilder {
         String query = "";
         String primaryKey = "PRIMARY KEY";
         String foreignKey = "";
-//        System.out.println(table.getAlterColumns());
+        System.out.println(table);
 //        System.out.println(table.getColumns());
 //        System.out.println(table);
         for(Column column : table.getAlterColumns()){

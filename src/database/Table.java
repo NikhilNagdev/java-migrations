@@ -30,6 +30,10 @@ public class Table {
         this.columns = columns;
     }
 
+    public void addAlteredColumnToTableObject(Column column) {
+        this.getColumns().add(column);
+    }
+
     @Override
     public String toString() {
         return "Table{" +
@@ -40,4 +44,5 @@ public class Table {
 
     private List<Column> columns = null;
     private List<Column> alterColumns = null;
+
 }

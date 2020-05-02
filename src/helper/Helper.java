@@ -20,7 +20,8 @@ public class Helper {
         }
         if(result.equals("create")){
             return Files.CREATE;
-        }else if(result.equals("add")){
+        }else if(result.equals("add") || result.equals("change") || result.equals("modify")){
+//            System.out.println(result);
             return Files.ALTER;
         }
         return null;
@@ -29,12 +30,13 @@ public class Helper {
     public static String getTableNameFromFileName(String name){
         Pattern pattern = null;
         if(getFileType(name).equals(Files.ALTER)){
-            pattern = Pattern.compile("to_([a-z|_]+)_table");
+            pattern = Pattern.compile("[to|from]_([a-z|_]+)_table");
         }else if(getFileType(name).equals(Files.CREATE)){
             pattern = Pattern.compile("create_([a-z|_]+)_table");
         }
         Matcher matcher = pattern.matcher(name);
         if (matcher.find()) {
+            System.out.println(name);
             return matcher.group(1);
         }
         return null;
