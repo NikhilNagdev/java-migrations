@@ -22,6 +22,8 @@ public class ColumnBuilder {
         this.datatypeMapping.put("tinyinteger", "tinyint");
         this.datatypeMapping.put("string", "varchar");
         this.datatypeMapping.put("varchar", "varchar");
+        this.datatypeMapping.put("timestamp", "timestamp");
+        this.datatypeMapping.put("datetime", "datetime");
     }
 
     public String getColumnDatatype(Column column){
@@ -32,9 +34,9 @@ public class ColumnBuilder {
         return column.getColumn_name() + " " +
                 getColumnDatatype(column) +
                 getLengthAttribute(column) +
-                addUnsignedAttribute(column) +
-                addAutoIncrementAttribute(column) +
-                addDefaultAttribute(column) +
+                getUnsignedAttribute(column) +
+                getAutoIncrementAttribute(column) +
+                getDefaultAttribute(column) +
                 ",\n";
     }
 
@@ -42,15 +44,20 @@ public class ColumnBuilder {
         return column.getColumn_name() + " " +
                 getColumnDatatype(column) +
                 getLengthAttribute(column) +
-                addDefaultAttribute(column) +
+                getDefaultAttribute(column) +
                 ",\n";
     }
 
-    private String addAutoIncrementAttribute(Column column){
-        return (column.isPrimarykey() ? " AUTO_INCREMENT" : "");
+    public String getColumnQueryForDateAndTime(Column column){
+        return column.getColumn_name() + " " +
+                getColumnDatatype(column) +
+                getDefaultAttribute(column) +
+                ",\n";
     }
 
-
+    public String getAutoIncrementAttribute(Column column){
+        return (column.isPrimarykey() ? " AUTO_INCREMENT" : "");
+    }
 
     public String getLengthAttribute(Column column){
         if(column.getDatatype().equalsIgnoreCase("string") && ((column.getLength() == 0))){
@@ -63,7 +70,7 @@ public class ColumnBuilder {
         return "";
     }
 
-    public String addUnsignedAttribute(Column column){
+    public String getUnsignedAttribute(Column column){
 
         if(column.isUnsigned()){
             return " UNSIGNED";
@@ -71,7 +78,7 @@ public class ColumnBuilder {
         return "";
     }
 
-    private String addDefaultAttribute(Column column) {
+    public String getDefaultAttribute(Column column) {
         if(column.getDatatype().equalsIgnoreCase("timestamp") || column.getDatatype().equalsIgnoreCase("varchar")){
             return " DEFAULT " + column.getDefaultValue().toString();
         }
@@ -82,6 +89,15 @@ public class ColumnBuilder {
 
     public String addColumnToPrimaryKey(Column column){
         return (column.isPrimarykey() ? column.getColumn_name() + ", " : "");
+    }
+
+    public String getForeignKeyAttributes(Column column) {
+        return "CONSTRAINT FOREIGN KEY (" +
+                column.getColumn_name() + ")" +
+                " REFERENCES " + column.getForeignKeyAttributes().get("on_table") +
+                "(" +  column.getForeignKeyAttributes().get("references") + ")" +
+                (column.getForeignKeyAttributes().get("on_delete") != null ? " ON DELETE " + column.getForeignKeyAttributes().get("on_delete") : "");
+
     }
 
     private Map<String, String> datatypeMapping = null;

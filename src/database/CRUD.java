@@ -42,7 +42,8 @@ public class CRUD {
     }
 
     public boolean runCreate(String query){
-
+        System.out.println(query);
+        System.out.println();
 //        if(this.isConnectionInitialized){
             try {
 //                System.out.println("boolean : " + );

@@ -48,45 +48,26 @@ public class Migrator {
             if(this.isMigrationTypeCreate(migrationName)){
                 if(crud.runCreate(this.schemaBuilder.generateTableQuery(table))){
                     migration.addMigrationEntry(migrationName);//logging the ran migration
-//                        System.out.println("Table created");
                     if(flag)
                         return false;//false indicates migrations are pending to run
                 }
             }else if(Helper.getFileType(migrationName).equals(Files.ALTER_ADD)){
                 System.out.println(table);
-                if(crud.runAlter(this.queryBuilder.generateAlterTableQuery(table, Files.ALTER_ADD))){
+                if(crud.runAlter(this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_ADD))){
                     migration.addMigrationEntry(migrationName);//logging the ran migration
                     table.getColumns().addAll(table.getAlterColumns());
                     if(flag)
                         return false;//false indicates migrations are pending to run
                 }
             }else if(Helper.getFileType(migrationName).equals(Files.ALTER_CHANGE)){
-                if(crud.runAlter(this.queryBuilder.generateAlterTableQuery(table, Files.ALTER_CHANGE))){
+                if(crud.runAlter(this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_CHANGE))){
                     migration.addMigrationEntry(migrationName);//logging the ran migration
-                    table.getColumns().addAll(table.getAlterColumns());
+//                    table.getColumns().addAll(table.getAlterColumns());
                     if(flag)
                         return false;//false indicates migrations are pending to run
                 }
             }
         }
-//
-//        for(Table table : tables){
-//            //checking if migration was already ran
-//            if(!ranMigrations.contains(this.migration.getMigrationName(table.getTableName()))){
-//                if(crud.runCreate(queryBuilder.generateTableQuery(table))){
-//                    migration.addMigrationEntry(table.getTableName());//logging the ran migration
-//                    System.out.println("Table created");
-//                    if(flag)
-//                        flag = false;//false indicates migrations are pending to run
-//                }
-//                else
-//                    System.out.println("There was some problem while creating table");
-//            }else{
-//                if(!flag)
-//                    flag = true;
-//            }
-//        }
-
        return flag;
     }
 
