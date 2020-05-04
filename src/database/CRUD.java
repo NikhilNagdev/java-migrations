@@ -43,7 +43,6 @@ public class CRUD {
 
     public boolean runCreate(String query){
         System.out.println(query);
-        System.out.println();
 //        if(this.isConnectionInitialized){
             try {
 //                System.out.println("boolean : " + );
@@ -56,7 +55,7 @@ public class CRUD {
 //            this.initConnection();
 //        }
 
-        return false;
+        return true;
 
     }
 
@@ -70,7 +69,6 @@ public class CRUD {
                     i++;
                 }
             }
-            System.out.println("PREPARED " + preparedStatement);
             return this.preparedStatement.executeUpdate() > 0;
         }catch (SQLException se) {
             System.out.println("Exception " + se);
@@ -79,13 +77,14 @@ public class CRUD {
     }
 
     public boolean runAlter(String query) {
+        System.out.println(query);
         try {
             this.statement.execute(query);
             return true;
         }catch(SQLException se){
             System.out.println("Exception while altering table: " + se);
         }
-        return false;
+        return true;
     }
 
     private List<SortedMap<String, Object>> resultSetToCollection(ResultSet resultSet){

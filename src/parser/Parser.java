@@ -43,29 +43,6 @@ public class Parser {
     }
 
     /**
-     * This method is used to return the table object that is created as per JSON file
-     * @return table object
-     */
-    public Table getTable(){
-        Table table = new Table();
-        String tableName = jsonTableObject.getString("table_name");
-        table.setTableName(tableName);
-        if(jsonTableObject.containsKey("alter_columns")){
-            if(this.tableObjectsMap.containsKey(tableName)){
-                this.tableObjectsMap.get(tableName).setAlterColumns(getColumns());
-                //this is done because we have to setAlterColumns of the table that is existing
-                return this.tableObjectsMap.get(tableName);
-            }else{
-                System.out.println("Table " + tableName + " doesn't exists");
-            }
-        }else if(jsonTableObject.containsKey("columns")){
-            table.setColumns(getColumns());
-        }
-        return table;
-    }
-
-
-    /**
      * This method returns the list of table objects generated as per migrations files
      * @return list of table objects
      */
@@ -77,13 +54,63 @@ public class Parser {
         for(String path : paths){
             setJsonTableObject(path);//setting jsonreader object and jsontable object as per one file
 //            tables.add(getTable());
-            Table table = getTable();
-            tableMap.put(Helper.getFileType(path) + "_" + table.getTableName(), table);
-            this.tableObjectsMap.put(table.getTableName(), table);
+//            Table table = getTable(path);
+//            tableMap.put(Helper.getFileType(path) + "_" + table.getTableName(), table);
+//            this.tableObjectsMap.put(table.getTableName(), table);
         }
         return tableMap;
     }
 
+    /**
+     * This method is used to return the table object that is created as per JSON file
+     * @return table object
+     */
+    public Table getTable(String path, String p){
+        boolean flag = false;
+        System.out.println(path);
+        Table table = new Table();
+        setJsonTableObject(p);
+        String tableName = jsonTableObject.getString("table_name");
+        table.setTableName(tableName);
+        if(jsonTableObject.containsKey("alter_columns")){
+            if(this.tableObjectsMap.containsKey(tableName)){
+                if(this.tableObjectsMap.get(tableName).getAlterColumns() == null){
+                    this.tableObjectsMap.get(tableName).setAlterColumns(getColumns());
+                }
+                else{
+//                    this.tableObjectsMap.get(tableName).getAlterColumns().addAll(getColumns());
+//                    this.tableObjectsMap.get(tableName).setAlterColumns(
+//                            this.tableObjectsMap.get(tableName).getAlterColumns()
+//                    );
+
+                    for(Column column : getColumns()){
+                        if(this.tableObjectsMap.get(tableName).getAlterColumns().contains(column)){
+                            this.tableObjectsMap.get(tableName)
+                                    .getAlterColumns()
+                                    .set(this.tableObjectsMap.get(tableName).getAlterColumns().indexOf(column), column);
+                            flag = true;
+                        }else{
+                            this.tableObjectsMap.get(tableName)
+                                    .getAlterColumns()
+                                    .add(column);
+                        }
+                    }
+//                    if(!flag)
+//                        this.tableObjectsMap.get(tableName).setAlterColumns(
+//                                this.tableObjectsMap.get(tableName).getAlterColumns()
+//                        );
+                }
+                //this is done because we have to setAlterColumns of the table that is existing
+                return this.tableObjectsMap.get(tableName);
+            }else{
+                System.out.println("Table " + tableName + " doesn't exists");
+            }
+        }else if(jsonTableObject.containsKey("columns")){
+            table.setColumns(getColumns());
+        }
+        this.tableObjectsMap.put(table.getTableName(), table);
+        return table;
+    }
 
     /**
      * This method is used to return the list of columns that are specified JSON file

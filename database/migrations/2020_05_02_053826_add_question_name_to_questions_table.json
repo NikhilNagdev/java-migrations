@@ -1,0 +1,10 @@
+{
+	"table_name": "questions",
+	"alter_columns":[
+		{
+			"question_name" : {
+				"datatype" : "string"
+			}
+		}
+	]
+}
