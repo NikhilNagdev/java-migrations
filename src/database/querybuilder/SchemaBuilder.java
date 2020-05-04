@@ -5,6 +5,9 @@ import constants.Files;
 import database.Column;
 import database.Table;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SchemaBuilder {
 
     public SchemaBuilder(){
@@ -76,7 +79,8 @@ public class SchemaBuilder {
 
     }
 
-    public String generateAlterTableQuery(Table table, String alterType){
+    public List<String> generateAlterTableQuery(Table table, String alterType){
+        List<String> queries = new ArrayList<String>();
         String query = "";
 //        String primaryKey = "PRIMARY KEY";
         String foreignKey = "";
@@ -128,8 +132,9 @@ public class SchemaBuilder {
             }else{
                 query = query.substring(0, query.length()-2);
             }
+            queries.add(query);
         }
-        return query;
+        return queries;
     }
 
     private ColumnBuilder columnBuilder = null;

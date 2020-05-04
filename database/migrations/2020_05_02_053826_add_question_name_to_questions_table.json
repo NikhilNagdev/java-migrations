@@ -5,6 +5,11 @@
 			"question_name" : {
 				"datatype" : "string"
 			}
+		},
+		{
+			"qn" : {
+				"datatype" : "string"
+			}
 		}
 	]
 }

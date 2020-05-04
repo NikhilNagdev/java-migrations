@@ -57,8 +57,7 @@ public class Migrator {
                         return false;//false indicates migrations are pending to run
                 }
             }else if(Helper.getFileType(migrationName).equals(Files.ALTER_ADD)){
-                String query = this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_ADD);
-                if(crud.runAlter(query)){
+                if(crud.runAlterQueries(this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_ADD))){
                     migration.addMigrationEntry(migrationName);//logging the ran migration
                     table.getColumns().addAll(table.getAlterColumns());
                     table.getAlterColumns().clear();
@@ -66,9 +65,9 @@ public class Migrator {
                         return false;//false indicates migrations are pending to run
                 }
             }else if(Helper.getFileType(migrationName).equals(Files.ALTER_CHANGE)){
-                if(crud.runAlter(this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_CHANGE))){
+                if(crud.runAlterQueries(this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_CHANGE))){
                     migration.addMigrationEntry(migrationName);//logging the ran migration
-//                    table.getColumns().addAll(table.getAlterColumns());
+                    table.getColumns().addAll(table.getAlterColumns());
                     if(flag)
                         return false;//false indicates migrations are pending to run
                 }

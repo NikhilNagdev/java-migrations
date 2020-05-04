@@ -76,6 +76,19 @@ public class CRUD {
         return true;
     }
 
+    public boolean runAlterQueries(List<String> queries) {
+        boolean flag = true;
+        for(String query : queries){
+            if(flag)
+                flag = this.runAlter(query);
+            else{
+                System.out.println("There was some problem altering table ");
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean runAlter(String query) {
         System.out.println(query);
         try {
