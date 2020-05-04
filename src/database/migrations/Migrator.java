@@ -32,30 +32,36 @@ public class Migrator {
     public void runMigrations() {
         boolean flag = true;
         createMigrationTable();//creating a migration table to keep a track of migrations that were already ran
-        Map<String, Table> tableMap = parser.getTables();//getting the Table objects that were created by parser as per the migration files
+        /*parser.getTables()*/;//getting the Table objects that were created by parser as per the migration files
         List<String> allMigrations = this.fileOperation.getFileNamesFromFolder("database\\migrations");
         List<String> ranMigrations = this.migration.getRanMigrations();
+
+        List<String> paths = this.fileOperation.getAllPathsMigration( "database\\migrations");
+        int i=0;
         for (String migrationName : allMigrations) {
-            flag = runMigration(migrationName, tableMap, ranMigrations, flag);
+            flag = runMigration(migrationName, /*tableMap,*/ ranMigrations, flag, parser.getTable(migrationName, paths.get(i++)));
         }
         System.out.println((flag ? "Nothing to migrate..." : "Migrated Successfully"));
     }
 
-    private boolean runMigration(String migrationName, Map<String, Table> tableMap, List<String> ranMigrations, boolean flag){
-        Table table = tableMap.get(Helper.getFileType(migrationName) + "_" + Helper.getTableNameFromFileName(migrationName));
+    private boolean runMigration(String migrationName, /*Map<String, Table> tableMap*/ List<String> ranMigrations, boolean flag
+    , Table table){
+//        Table table = tableMap.get(Helper.getFileType(migrationName) + "_" + Helper.getTableNameFromFileName(migrationName));
 //        System.out.println(Helper.getFileType(migrationName) + "_" + Helper.getTableNameFromFileName(migrationName));
         if(!ranMigrations.contains(migrationName)){
             if(this.isMigrationTypeCreate(migrationName)){
+
                 if(crud.runCreate(this.schemaBuilder.generateTableQuery(table))){
                     migration.addMigrationEntry(migrationName);//logging the ran migration
                     if(flag)
                         return false;//false indicates migrations are pending to run
                 }
             }else if(Helper.getFileType(migrationName).equals(Files.ALTER_ADD)){
-                System.out.println(table);
-                if(crud.runAlter(this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_ADD))){
+                String query = this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_ADD);
+                if(crud.runAlter(query)){
                     migration.addMigrationEntry(migrationName);//logging the ran migration
                     table.getColumns().addAll(table.getAlterColumns());
+                    table.getAlterColumns().clear();
                     if(flag)
                         return false;//false indicates migrations are pending to run
                 }

@@ -1,0 +1,16 @@
+{
+	"table_name": "questions",
+	"alter_columns":[
+		{
+			"uid": {
+				"datatype": "biginteger",
+				"unsigned" : true,
+				"foreign_key" : {
+					"references" : "user_id",
+					"on_table" : "users",
+					"on_delete" : "cascade"
+				}
+			}
+		}
+	]
+}

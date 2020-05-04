@@ -76,7 +76,7 @@ public class SchemaBuilder {
 
     }
 
-    public String generateAlterTableQuery(Table table, String alertType){
+    public String generateAlterTableQuery(Table table, String alterType){
         String query = "";
 //        String primaryKey = "PRIMARY KEY";
         String foreignKey = "";
@@ -87,9 +87,9 @@ public class SchemaBuilder {
 //            }else{
 //                query += " ADD COLUMN ";
 //            }
-            if(alertType.equals(Files.ALTER_CHANGE)){
+            if(alterType.equals(Files.ALTER_CHANGE)){
                 query += " MODIFY COLUMN ";
-            }else if(alertType.equals(Files.ALTER_ADD)){
+            }else if(alterType.equals(Files.ALTER_ADD)){
                 query += " ADD COLUMN ";
             }
 
@@ -123,10 +123,11 @@ public class SchemaBuilder {
                 query += columnBuilder.getColumnQueryForDateAndTime(column);
             }
 
-            query += column.isForeignKey() ?
-                    "ADD " + columnBuilder.getForeignKeyAttributes(column) :
-                    query.substring(0, query.length()-2);
-            System.out.println(query);
+            if(column.isForeignKey()){
+                query += "ADD " + columnBuilder.getForeignKeyAttributes(column);
+            }else{
+                query = query.substring(0, query.length()-2);
+            }
         }
         return query;
     }

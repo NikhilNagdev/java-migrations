@@ -81,15 +81,21 @@ public class Migration {
      * @return List of ran migrations
      */
     public List<String> getRanMigrations(){
+
         List<String> finalResults = new ArrayList<String>();
-        List<SortedMap<String, Object>> results
-                = this.queryBuilder
-                        .select("*")
-                        .get();
-        for(SortedMap<String, Object> result : results){
-            finalResults.add((String)result.get("name"));
+        if(doMigrationTableExists()){
+            List<SortedMap<String, Object>> results
+                    = this.queryBuilder
+                    .select("*")
+                    .get();
+            for(SortedMap<String, Object> result : results){
+                finalResults.add((String)result.get("name"));
+            }
+            return finalResults;
+        }else{
+            return finalResults;
         }
-        return finalResults;
+
     }
 
 

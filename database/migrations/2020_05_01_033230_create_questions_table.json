@@ -1,0 +1,50 @@
+{
+	"table_name": "questions",
+	"columns" : [
+		{
+			"id": {
+				"datatype": "biginteger",
+				"primary_key": true,
+				"unsigned" : true,
+				"length": 11
+			}
+		},
+		{
+			"title": {
+				"datatype": "string"
+			}
+		},
+		{
+			"slug": {
+				"datatype": "string",
+				"unique": true
+			}
+		},
+
+		{
+			"body": {
+				"datatype": "text"
+			}
+		},
+
+		{
+			"views_count": {
+				"datatype": "biginteger",
+				"default_value": 0,
+				"unsigned": true
+			}
+		},
+
+		{
+			"user_id": {
+				"datatype": "biginteger",
+				"unsigned" : true,
+				"foreign_key" : {
+					"references" : "user_id",
+					"on_table" : "users",
+					"on_delete" : "cascade"
+				}
+			}
+		}
+	]
+}

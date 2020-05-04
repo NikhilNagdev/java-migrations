@@ -32,7 +32,7 @@ public class Column implements Comparable<Column> {
             return false;
         }
         Column column = (Column) obj;
-        System.out.println(this.column_name + " == " + column.column_name);
+//        System.out.println(this.column_name + " == " + column.column_name);
         return this.getColumn_name().equals(column.getColumn_name());
     }
 
