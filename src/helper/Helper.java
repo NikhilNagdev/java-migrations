@@ -31,19 +31,22 @@ public class Helper {
 ////            System.out.println(result);
 //            return Files.ALTER;
 //        }
-        return null;
+        return "alter_drop";
     }
 
     public static String getTableNameFromFileName(String name){
         Pattern pattern = null;
-        if(getFileType(name).equals(Files.ALTER_ADD) || getFileType(name).equals(Files.ALTER_CHANGE)){
+        if(
+                getFileType(name).equals(Files.ALTER_ADD) ||
+                getFileType(name).equals(Files.ALTER_CHANGE) ||
+                getFileType(name).equals(Files.ALTER_DROP)
+        ){
             pattern = Pattern.compile("[to|from]_([a-z|_]+)_table");
         }else if(getFileType(name).equals(Files.CREATE)){
             pattern = Pattern.compile("create_([a-z|_]+)_table");
         }
         Matcher matcher = pattern.matcher(name);
         if (matcher.find()) {
-            System.out.println(name);
             return matcher.group(1);
         }
         return null;

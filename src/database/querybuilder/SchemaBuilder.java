@@ -86,35 +86,35 @@ public class SchemaBuilder {
         String foreignKey = "";
         for(Column column : table.getAlterColumns()){
             query = "ALTER TABLE " + table.getTableName();
-//            if(table.getColumns().contains(column)){
-//                query += " MODIFY COLUMN ";
-//            }else{
-//                query += " ADD COLUMN ";
-//            }
-            if(alterType.equals(Files.ALTER_CHANGE)){
-                query += " MODIFY COLUMN ";
-            }else if(alterType.equals(Files.ALTER_ADD)){
-                query += " ADD COLUMN ";
-            }
+            if(alterType.equals(Files.ALTER_DROP)){
+                query += " DROP COLUMN " + column.getColumn_name();
+                queries.add(query);
+            }else{
+                if(alterType.equals(Files.ALTER_CHANGE)){
+                    query += " MODIFY COLUMN ";
+                }else if(alterType.equals(Files.ALTER_ADD)){
+                    query += " ADD COLUMN ";
+                }else if(alterType.equals(Files.ALTER_DROP)){
+                    query += " DROP COLUMN " + column.getColumn_name();
 
-            String columnDatatype = column.getDatatype();
-
-            if(
-                    columnDatatype.equalsIgnoreCase("int") ||
-                    columnDatatype.equalsIgnoreCase("tinyint") ||
-                    columnDatatype.equalsIgnoreCase("biginteger") ||
-                    columnDatatype.equalsIgnoreCase("bigint")
-            ){
-                query += columnBuilder.getColumnQueryForNumber(column);
+                }
+                String columnDatatype = column.getDatatype();
+                if(
+                        columnDatatype.equalsIgnoreCase("int") ||
+                        columnDatatype.equalsIgnoreCase("tinyint") ||
+                        columnDatatype.equalsIgnoreCase("biginteger") ||
+                        columnDatatype.equalsIgnoreCase("bigint")
+                ){
+                    query += columnBuilder.getColumnQueryForNumber(column);
 //                primaryKey += column.isPrimarykey() ? column.getColumn_name() : "";
 
-            }else if(
-                    columnDatatype.equalsIgnoreCase("string") ||
-                    columnDatatype.equalsIgnoreCase("varchar")
-            ){
-                query += columnBuilder.getColumnQueryForString(column);
+                }else if(
+                        columnDatatype.equalsIgnoreCase("string") ||
+                                columnDatatype.equalsIgnoreCase("varchar")
+                ){
+                    query += columnBuilder.getColumnQueryForString(column);
 //                primaryKey += columnBuilder.addColumnToPrimaryKey(column);
-            }
+                }
             /*else if(columnDatatype.equalsIgnoreCase("text")){
 
                 query += column.getColumn_name() +
@@ -124,15 +124,16 @@ public class SchemaBuilder {
 //                primaryKey += column.isPrimarykey() ? column.getColumn_name() + ", " : "";
 
             }*/else if(columnDatatype.equalsIgnoreCase("timestamp")){
-                query += columnBuilder.getColumnQueryForDateAndTime(column);
-            }
+                    query += columnBuilder.getColumnQueryForDateAndTime(column);
+                }
 
-            if(column.isForeignKey()){
-                query += "ADD " + columnBuilder.getForeignKeyAttributes(column);
-            }else{
-                query = query.substring(0, query.length()-2);
+                if(column.isForeignKey()){
+                    query += "ADD " + columnBuilder.getForeignKeyAttributes(column);
+                }else{
+                    query = query.substring(0, query.length()-2);
+                }
+                queries.add(query);
             }
-            queries.add(query);
         }
         return queries;
     }

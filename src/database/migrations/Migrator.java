@@ -68,6 +68,14 @@ public class Migrator {
                 if(crud.runAlterQueries(this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_CHANGE))){
                     migration.addMigrationEntry(migrationName);//logging the ran migration
                     table.getColumns().addAll(table.getAlterColumns());
+                    table.getAlterColumns().clear();
+                    if(flag)
+                        return false;//false indicates migrations are pending to run
+                }
+            }else if(Helper.getFileType(migrationName).equals(Files.ALTER_DROP)){
+                if(crud.runAlterQueries(this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_DROP))){
+                    migration.addMigrationEntry(migrationName);//logging the ran migration
+                    table.getAlterColumns().clear();
                     if(flag)
                         return false;//false indicates migrations are pending to run
                 }

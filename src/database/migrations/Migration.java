@@ -36,7 +36,7 @@ public class Migration {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("name", name);
         values.add(map);
-        System.out.println(this.queryBuilder.insert(values));
+        this.queryBuilder.insert(values);
     }
 
 

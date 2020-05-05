@@ -67,7 +67,6 @@ public class Parser {
      */
     public Table getTable(String path, String p){
         boolean flag = false;
-        System.out.println(path);
         Table table = new Table();
         setJsonTableObject(p);
         String tableName = jsonTableObject.getString("table_name");
@@ -105,6 +104,8 @@ public class Parser {
             }else{
                 System.out.println("Table " + tableName + " doesn't exists");
             }
+        }else if(jsonTableObject.containsKey("drop_columns")){
+            table.setAlterColumns(getColumns());
         }else if(jsonTableObject.containsKey("columns")){
             table.setColumns(getColumns());
         }
@@ -117,8 +118,15 @@ public class Parser {
      * @return List of column objects
      */
     public List<Column> getColumns(){
-        JsonArray columns = jsonTableObject.containsKey("alter_columns")
-                ? jsonTableObject.getJsonArray("alter_columns") : jsonTableObject.getJsonArray("columns");
+        JsonArray columns = null;
+        if(jsonTableObject.containsKey("alter_columns")){
+            columns = jsonTableObject.getJsonArray("alter_columns");
+        }else if(jsonTableObject.containsKey("drop_columns")){
+            columns = jsonTableObject.getJsonArray("drop_columns");
+            return getAlterDropColumn(columns);
+        }else if(jsonTableObject.containsKey("columns")){
+            columns = jsonTableObject.getJsonArray("columns");
+        }
         List<Column> columnList = new ArrayList<Column>();
         for (JsonObject column : columns.getValuesAs(JsonObject.class)){
             columnList.add(getColumn(column));
@@ -127,6 +135,15 @@ public class Parser {
         return columnList;
     }
 
+    public List<Column> getAlterDropColumn(JsonArray columns){
+        List<Column> finalList = new ArrayList<Column>();
+        for(JsonValue q : columns){
+            Column column = new Column();
+            column.setColumn_name(q.toString().substring(1, q.toString().length()-1));
+            finalList.add(column);
+        }
+        return finalList;
+    }
 
     /**
      * This method is used to return a single columnObj which is generated as per JSON file

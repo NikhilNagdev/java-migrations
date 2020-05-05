@@ -14,5 +14,6 @@ public interface Files {
                     "}";
     String ALTER_ADD = "alter_add";
     String ALTER_CHANGE = "alter_change";
+    String ALTER_DROP = "alter_drop";
     String CREATE = "create";
 }
