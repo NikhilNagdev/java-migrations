@@ -75,7 +75,10 @@ public class Migrator {
             }else if(Helper.getFileType(migrationName).equals(Files.ALTER_DROP)){
                 if(crud.runAlterQueries(this.schemaBuilder.generateAlterTableQuery(table, Files.ALTER_DROP))){
                     migration.addMigrationEntry(migrationName);//logging the ran migration
+                    System.out.println(table.getAlterColumns());
+                    table.removeColumnsFromTableAfterDrop();
                     table.getAlterColumns().clear();
+                    System.out.println(table);
                     if(flag)
                         return false;//false indicates migrations are pending to run
                 }

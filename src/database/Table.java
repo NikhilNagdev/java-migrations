@@ -1,8 +1,14 @@
 package database;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Table {
+
+    public Table(){
+        columns = new ArrayList<Column>();
+        alterColumns = new ArrayList<Column>();
+    }
 
     private String tableName = null;
 
@@ -34,10 +40,20 @@ public class Table {
         this.getColumns().add(column);
     }
 
+    public void removeColumnsFromTableAfterDrop(){
+        for(Column column : this.getAlterColumns()){
+            if(this.columns.contains(column)){
+                this.columns.remove(column);
+            }
+        }
+
+    }
+
     @Override
     public String toString() {
         return "Table{" +
                 "tableName='" + tableName + '\'' +
+                ", columns=" + columns +
                 ", alterColumns=" + alterColumns +
                 '}';
     }
