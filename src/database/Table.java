@@ -36,14 +36,25 @@ public class Table {
         this.columns = columns;
     }
 
-    public void addAlteredColumnToTableObject(Column column) {
-        this.getColumns().add(column);
-    }
-
+    /**
+     * This method is used to remove columns that were dropped.
+     * Removes Column objects from the Table object that were dropped
+     */
     public void removeColumnsFromTableAfterDrop(){
         for(Column column : this.getAlterColumns()){
+            this.columns.remove(column);
+        }
+    }
+
+    /**
+     * This method is used to change thw Column Object in Table Object.
+     */
+    public void addChangedColumnsToTableObj(){
+        for(Column column : this.getAlterColumns()){
+            //checking if the column is existing in Column list
             if(this.columns.contains(column)){
-                this.columns.remove(column);
+                //Changing the column with altered Column
+                this.columns.set(this.columns.indexOf(column), column);
             }
         }
 
