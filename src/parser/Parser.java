@@ -4,7 +4,6 @@ import database.Column;
 import database.Database;
 import database.Table;
 import files.FileOperation;
-import helper.Helper;
 
 import javax.json.*;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class Parser {
         setJsonConfigObjects(rootFolderPath);
         this.tableObjectsMap = new HashMap<String, Table>();
     }
-
 
     /**
      * This method sets the readerObj with the specified path and then jsonTableObject is set by readerObj
@@ -62,59 +60,54 @@ public class Parser {
     }
 
     /**
-     * This method is used to return the table object that is created as per JSON file
-     * @return table object
+     * This method is used to return the Table object that is created as per migration file
+     * @return Table object
      */
-    public Table getTable(String path, String p){
-        boolean flag = false;
+    public Table getTable(String pathToMigrationFile){
         Table table = new Table();
-        setJsonTableObject(p);
+        setJsonTableObject(pathToMigrationFile);//Json object has to be set first to get all the values from migration file
         String tableName = jsonTableObject.getString("table_name");
         table.setTableName(tableName);
+        //if the migration file is of alter type then
         if(jsonTableObject.containsKey("alter_columns")){
             if(this.tableObjectsMap.containsKey(tableName)){
+                //if there are no alter columns in the Table object then we have to add the Columns in the table object
                 if(this.tableObjectsMap.get(tableName).getAlterColumns() == null){
                     this.tableObjectsMap.get(tableName).setAlterColumns(getColumns());
                 }
                 else{
-//                    this.tableObjectsMap.get(tableName).getAlterColumns().addAll(getColumns());
-//                    this.tableObjectsMap.get(tableName).setAlterColumns(
-//                            this.tableObjectsMap.get(tableName).getAlterColumns()
-//                    );
-
                     for(Column column : getColumns()){
+                        //if Column is already in the alterColumn List that means that column is already been added to the list and the current Column attributes are changed so we will update that column entry with the changed attributes
                         if(this.tableObjectsMap.get(tableName).getAlterColumns().contains(column)){
                             this.tableObjectsMap.get(tableName)
+                                    //getting all the alter Columns first
                                     .getAlterColumns()
+                                    //then getting the index of the Column that has to updated and then setting it to the List of alter columns
                                     .set(this.tableObjectsMap.get(tableName).getAlterColumns().indexOf(column), column);
-                            flag = true;
                         }else{
+                            //If there is a new Column then simply adding it to the alter Column list
                             this.tableObjectsMap.get(tableName)
                                     .getAlterColumns()
                                     .add(column);
                         }
                     }
-//                    if(!flag)
-//                        this.tableObjectsMap.get(tableName).setAlterColumns(
-//                                this.tableObjectsMap.get(tableName).getAlterColumns()
-//                        );
                 }
-                //this is done because we have to setAlterColumns of the table that is existing
                 return this.tableObjectsMap.get(tableName);
             }else{
                 System.out.println("Table " + tableName + " doesn't exists");
             }
         }else if(jsonTableObject.containsKey("drop_columns")){
-            table.setAlterColumns(getColumns());
+            table.setAlterColumns(getColumns());//as we have to just drop columns then we will simply add those columns to the alter list
         }else if(jsonTableObject.containsKey("columns")){
-            table.setColumns(getColumns());
+            table.setColumns(getColumns());//this is used while create query
         }
         this.tableObjectsMap.put(table.getTableName(), table);
         return table;
     }
 
     /**
-     * This method is used to return the list of columns that are specified JSON file
+     * This method is used to return the list of Column.
+     * The Column object are set with respect to the migration file.
      * @return List of column objects
      */
     public List<Column> getColumns(){
@@ -128,25 +121,30 @@ public class Parser {
             columns = jsonTableObject.getJsonArray("columns");
         }
         List<Column> columnList = new ArrayList<Column>();
-        for (JsonObject column : columns.getValuesAs(JsonObject.class)){
+        for (JsonObject column : columns.getValuesAs(JsonObject.class)){//getting a single JsonObject for the column object in json file
             columnList.add(getColumn(column));
         }
-//        System.out.println(columnList);
         return columnList;
     }
 
+    /**
+     * This method is used to set the Column object as per alter drop query needs.
+     * Alter drop query only needs a column name to a drop a column.
+     * @param columns names of columns to be dropped
+     * @return List of Columns to be dropped
+     */
     public List<Column> getAlterDropColumn(JsonArray columns){
         List<Column> finalList = new ArrayList<Column>();
         for(JsonValue q : columns){
             Column column = new Column();
-            column.setColumn_name(q.toString().substring(1, q.toString().length()-1));
+            column.setColumnName(q.toString().substring(1, q.toString().length()-1));
             finalList.add(column);
         }
         return finalList;
     }
 
     /**
-     * This method is used to return a single columnObj which is generated as per JSON file
+     * This method is used to return a single Column obj which is generated as per migration file
      * @param column is JsonObject by which Column class object has to be created
      * @return Column class object
      */
@@ -162,16 +160,16 @@ public class Parser {
     }
 
     /**
-     * This method is used to set attributes to the Column class obj as per the attributes defined in the JSON file
-     * @param columnObj the Column class object in which the attributes has to be set
-     * @param columnAttributes JsonObject from which the attributes has to be fetched to set it in the Column class object
+     * This method is used to set attributes to the Column class obj as per the attributes defined in the migration file
+     * @param columnObj the Column class object in which the attributes are to be set
+     * @param columnAttributes JsonObject from which the attributes has to be fetched and then set it in the Column class object
      */
     public void setColumnAttributes(Column columnObj, JsonObject columnAttributes){
 
         if(columnAttributes.getString("datatype") != null){
             columnObj.setDatatype(columnAttributes.getString("datatype"));
         }else{
-            System.out.println("Datatype attribute is missing for column name " + columnObj.getColumn_name());
+            System.out.println("Datatype attribute is missing for column name " + columnObj.getColumnName());
         }
 
         if((columnAttributes.containsKey("primary_key"))){
@@ -210,11 +208,10 @@ public class Parser {
     }
 
     /**
-    * This method sets the Database objects with attributes as per config file
+     * This method sets the Database object with attributes as per config file
      * @return  the datatabse object
     */
     public Database setConfigAttributes(){
-
         Database db = new Database();
         db.setDbUrl(configJsonObject.getString("URL"));
         db.setDbHost(configJsonObject.getString("DB_HOST"));
@@ -223,11 +220,10 @@ public class Parser {
         db.setDbUsername(configJsonObject.getString("DB_USERNAME"));
         db.setDbPassword(configJsonObject.getString("DB_PASSWORD"));
         return db;
-
     }
 
     /**
-     * This method is sed to get the database object that is set as per config file
+     * This method is sed to get the database object that is set as per database config file
      * @return database object
      * */
     public Database getDatabase(){

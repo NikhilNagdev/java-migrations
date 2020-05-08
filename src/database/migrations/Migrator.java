@@ -4,7 +4,6 @@ import constants.Files;
 import database.CRUD;
 import database.Column;
 import database.Table;
-import database.querybuilder.QueryBuilder;
 import database.querybuilder.SchemaBuilder;
 import files.FileOperation;
 import helper.Helper;
@@ -38,7 +37,7 @@ public class Migrator {
         for (String migrationName : allMigrations) {
             //the migration should not be already ran
             if(!ranMigrations.contains(migrationName)){
-                flag = runMigration(migrationName, flag, parser.getTable(migrationName, paths.get(i++)));
+                flag = runMigration(migrationName, flag, parser.getTable(paths.get(i++)));
             }
         }
         System.out.println((flag ? "Nothing to migrate..." : "Migrated Successfully"));
@@ -125,7 +124,7 @@ public class Migrator {
             List<Column> columns = new ArrayList<Column>();
             Column column = new Column();
 
-            column.setColumn_name("id");
+            column.setColumnName("id");
             column.setDatatype("biginteger");
             column.setUnsigned(true);
             column.setIs_primary_key(true);
@@ -133,13 +132,13 @@ public class Migrator {
 
             Column migrationName = new Column();
 
-            migrationName.setColumn_name("name");
+            migrationName.setColumnName("name");
             migrationName.setDatatype("string");
             migrationName.setNot_null(true);
 
             Column isMigrationRan = new Column();
 
-            isMigrationRan.setColumn_name("isMigrationRan");
+            isMigrationRan.setColumnName("isMigrationRan");
             isMigrationRan.setDatatype("tinyint");
             isMigrationRan.setLength(1);
             isMigrationRan.setNot_null(true);

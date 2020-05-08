@@ -6,9 +6,6 @@ import files.FileOperation;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Migration {
 
@@ -29,7 +26,7 @@ public class Migration {
 
     /**
      * Adding an entry in migration table to indicate that migration was ran
-     * @param name
+     * @param name the migration name to be entered
      */
     public void addMigrationEntry(String name){
         List<LinkedHashMap<String, Object>> values = new ArrayList<>();
@@ -38,21 +35,6 @@ public class Migration {
         values.add(map);
         this.queryBuilder.insert(values);
     }
-
-
-    public String getMigrationName(String tableName){
-        List<String> fileNames = fileOperation.getFileNamesFromFolder("database\\migrations");
-        Pattern pattern = Pattern.compile("create_" + tableName + "_table.json");
-        Matcher matcher = null;
-        for(String name : fileNames){
-            matcher = pattern.matcher(name);
-            if (matcher.find()){
-                return name;
-            }
-        }
-        return null;
-    }
-
 
     /**
      * Checking if the migration table was already in database or not
@@ -77,18 +59,18 @@ public class Migration {
 
 
     /**
-     * Getting the migrations that were ran
+     * This method return the migrations that were ran
      * @return List of ran migrations
      */
     public List<String> getRanMigrations(){
 
         List<String> finalResults = new ArrayList<String>();
         if(doMigrationTableExists()){
-            List<SortedMap<String, Object>> results
+            List<LinkedHashMap<String, Object>> results
                     = this.queryBuilder
                     .select("*")
                     .get();
-            for(SortedMap<String, Object> result : results){
+            for(LinkedHashMap<String, Object> result : results){
                 finalResults.add((String)result.get("name"));
             }
             return finalResults;
@@ -98,7 +80,7 @@ public class Migration {
 
     }
 
-
+    //Variable declarations
     private FileOperation fileOperation = null;
     private QueryBuilder queryBuilder = null;
     private QueryBuilder tablesInfo = null;

@@ -9,10 +9,6 @@ import java.sql.*;
 
 public class Database {
 
-//    public Database(){
-//
-//    }
-
     private String dbUsername = "";
 
     public String getDbUsername() {
@@ -68,21 +64,25 @@ public class Database {
         this.connection = connection;
     }
 
-
-
     public Database getAllAttributes(){
         Parser p = new Parser("");
         return new Parser("").getDatabase();
     }
 
+    /**
+     * This method is used get the connection string that has to be used while generating Connection object.
+     * @return connection string
+     */
     public String getConnectionString(){
         return this.getDbUrl() + this.getDbHost() + ":" + this.getDbPort() + "/" + this.getDbName();
     }
 
+    /**
+     * This method is used to get the Connection object.
+     * @return Connection object
+     */
     public Connection getConnection(){
         try {
-//            return DriverManager.getConnection("jdbc:mysql://localhost:3306/restodb", "root", "");
-//            System.out.println("Connection String: " + this.getConnectionString());
             this.setConnection(DriverManager.getConnection(this.getConnectionString(), this.getDbUsername(), this.getDbPassword()));
             return this.connection;
         } catch (SQLException e) {
@@ -90,8 +90,6 @@ public class Database {
         }
         return null;
     }
-
-
 
     private String dbPassword = "";
     private String dbName = "";

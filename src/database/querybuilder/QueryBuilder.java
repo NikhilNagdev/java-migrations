@@ -20,61 +20,6 @@ public class QueryBuilder {
         this.bindings = new ArrayList<String>();
     }
 
-
-
-
-
-    private String addForeignKeyAttributes(String query, Column column) {
-
-//        CONSTRAINT FOREIGN KEY (PersonID)
-//        REFERENCES Persons(id)
-//                ON DELETE CASCADE,
-        String foreignKey = "CONSTRAINT FOREIGN KEY (" + column.getColumn_name() + ")" +
-                " REFERENCES " + column.getForeignKeyAttributes().get("on_table") + "(" + column.getForeignKeyAttributes().get("references") + ")" +
-                (column.getForeignKeyAttributes().get("on_delete") != null ? " ON DELETE " + column.getForeignKeyAttributes().get("on_delete") : "");
-        return foreignKey;
-
-    }
-
-    private String addDefaultAttribute(Column column) {
-
-        if(column.getDatatype().equalsIgnoreCase("timestamp") || column.getDatatype().equalsIgnoreCase("varchar")){
-            return " DEFAULT " + column.getDefaultValue().toString();
-        }
-        if(null != column.getDefaultValue())
-            return " DEFAULT " + column.getDefaultValue();
-        return "";
-    }
-
-
-    public String addLengthAttribute(Column column){
-
-        if(column.getDatatype().equalsIgnoreCase("string") && ((column.getLength() == 0))){
-            return "(" + DefaultLength.varcharLength + ")";
-        }else if (column.getLength() != 0){
-            return "(" + column.getLength() + ")";
-        }else if(column.getLength() == 0){
-            return "";
-        }
-        return "";
-    }
-
-    public String addPrimaryKeyAttribute(Column column){
-        return ((column.isPrimarykey()) ? ((column.getDatatype().equalsIgnoreCase("int") ||
-                                            column.getDatatype().equalsIgnoreCase("biginteger")) ?
-                                            " PRIMARY KEY AUTO_INCREMENT" : " PRIMARY KEY")
-                : "");
-    }
-
-    public String addUnsignedAttribute(Column column){
-
-        if(column.isUnsigned()){
-            return " UNSIGNED";
-        }
-        return "";
-    }
-
-
     /**
      * This method is used to take the columns which are to be selected
      * @param columnNames
@@ -101,12 +46,12 @@ public class QueryBuilder {
 
     /**
      * This methods runs the select query and returns the results.
-     * @return results returned by the select query
+     * @return Collection of results returned by the select query
      */
-    public List<SortedMap<String, Object>> get(){
+    public List<LinkedHashMap<String, Object>> get(){
         this.compileSelect();
-        List<SortedMap<String, Object>> result = this.crud.runSelect(this.compileSelect(), this.bindings);
-        clear();
+        List<LinkedHashMap<String, Object>> result = this.crud.runSelect(this.compileSelect(), this.bindings);
+        clear();//clearing all the bindings
         return result;
     }
 
@@ -431,9 +376,7 @@ public class QueryBuilder {
     }
 
     public boolean insert(List<LinkedHashMap<String, Object>> values){
-
         List<List<Object>> bindings = new ArrayList<>();
-
         for(LinkedHashMap<String, Object> value : values){
             List<Object> binding = new ArrayList<>();
             for(String column : value.keySet()){
@@ -442,16 +385,13 @@ public class QueryBuilder {
             bindings.add(binding);
         }
         return this.crud.runInsert(this.compileInsert(values), bindings);
-
     }
 
     private String compileInsert(List<LinkedHashMap<String, Object>> values) {
-
         String query = "INSERT INTO " + this.table + " ";
         String columns = "";
         String valuesInsert = " VALUES ";
         boolean areColumnIntialized = false;
-
         for(LinkedHashMap<String, Object> value : values){
             valuesInsert += "(";
             for(String column : value.keySet()){
@@ -467,6 +407,7 @@ public class QueryBuilder {
         return query;
     }
 
+    //Variable declarations
     private List<String> columns;
     private String table = "";
     private CRUD crud = null;
